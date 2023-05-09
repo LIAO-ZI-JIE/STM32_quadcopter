@@ -1,0 +1,62 @@
+#include "stm32f10x.h"                  // Device header
+void IC_Init(void)
+{
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
+	
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_8|GPIO_Pin_10;
+	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA,&GPIO_InitStructure);
+	
+	TIM_InternalClockConfig(TIM1);
+	
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
+	TIM_TimeBaseInitStruct.TIM_ClockDivision=TIM_CKD_DIV1;//濾波器時鐘選擇
+	TIM_TimeBaseInitStruct.TIM_CounterMode=TIM_CounterMode_Up;//計數器模式
+	TIM_TimeBaseInitStruct.TIM_Period=65535-1;//ARR計數
+	TIM_TimeBaseInitStruct.TIM_Prescaler=72-1;//PSC預分頻器
+	TIM_TimeBaseInitStruct.TIM_RepetitionCounter=0;//重複計數器
+	TIM_TimeBaseInit(TIM1,&TIM_TimeBaseInitStruct);
+	
+	TIM_ICInitTypeDef TIM_ICInitStructure;
+	TIM_ICInitStructure.TIM_Channel=TIM_Channel_1;//輸入通道
+	TIM_ICInitStructure.TIM_ICFilter=0xF;//輸入濾波強度選擇
+	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Rising;//上升源觸發
+	TIM_ICInitStructure.TIM_ICPrescaler=TIM_ICPSC_DIV1;//輸入分頻選擇選擇
+	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_DirectTI;//輸入是否交差
+	TIM_ICInit(TIM1,&TIM_ICInitStructure);
+	
+	TIM_PWMIConfig(TIM1,&TIM_ICInitStructure);//PWM1模式
+	
+	TIM_ICInitStructure.TIM_Channel=TIM_Channel_3;
+	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Falling;//下降源觸發
+	TIM_ICInit(TIM1,&TIM_ICInitStructure);
+//	
+//	TIM_PWMIConfig(TIM1,&TIM_ICInitStructure);//PWM1模式
+//	TIM_ICInitStructure.TIM_Channel=TIM_Channel_3;//輸入通道
+//	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Falling;//下降源觸發
+//	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_IndirectTI;//輸入是否交差
+	
+	TIM_ICInit(TIM1,&TIM_ICInitStructure);
+
+	
+	TIM_SelectInputTrigger(TIM1,TIM_TS_TI1FP1);//選擇從模式通道
+	TIM_SelectSlaveMode(TIM1,TIM_SlaveMode_Reset);//從模式選擇清零
+	
+	TIM_Cmd(TIM1,ENABLE);
+}
+uint16_t IC_GetFreq(void)
+{
+	return 1000000/(TIM_GetCapture1(TIM1)+1);
+}
+//uint16_t IC_GetTime(void)
+//{
+//	return (TIM_GetCapture2(TIM1)+1);
+//}
+uint16_t IC_GetDuty(void)
+{
+	return (float)(TIM_GetCapture2(TIM1)+1)/(TIM_GetCapture1(TIM1)+1)*100;
+}
+	
