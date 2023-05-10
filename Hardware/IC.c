@@ -27,19 +27,18 @@ void IC_Init(void)
 	TIM_ICInitStructure.TIM_ICPrescaler=TIM_ICPSC_DIV1;//輸入分頻選擇選擇
 	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_DirectTI;//輸入是否交差
 	TIM_ICInit(TIM1,&TIM_ICInitStructure);
-	
+
 	TIM_PWMIConfig(TIM1,&TIM_ICInitStructure);//PWM1模式
-	
+
 	TIM_ICInitStructure.TIM_Channel=TIM_Channel_3;
-	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Falling;//下降源觸發
+	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Rising;//上升源觸發
+	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_DirectTI;//輸入是否交差
 	TIM_ICInit(TIM1,&TIM_ICInitStructure);
-//	
-//	TIM_PWMIConfig(TIM1,&TIM_ICInitStructure);//PWM1模式
-//	TIM_ICInitStructure.TIM_Channel=TIM_Channel_3;//輸入通道
-//	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Falling;//下降源觸發
-//	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_IndirectTI;//輸入是否交差
 	
-	TIM_ICInit(TIM1,&TIM_ICInitStructure);
+	TIM_ICInitStructure.TIM_Channel=TIM_Channel_4;//輸入通道
+	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Falling;//上升源觸發
+	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_IndirectTI;//輸入是否交差
+	TIM_ICInit(TIM1,&TIM_ICInitStructure);	
 
 	
 	TIM_SelectInputTrigger(TIM1,TIM_TS_TI1FP1);//選擇從模式通道
