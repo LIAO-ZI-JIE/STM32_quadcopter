@@ -2,6 +2,7 @@
 void IC_Init(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1,ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
 	
@@ -51,14 +52,8 @@ void IC_Init(void)
 	TIM_SelectInputTrigger(TIM1,TIM_TS_TI1FP1);//選擇從模式通道
 	TIM_SelectSlaveMode(TIM1,TIM_SlaveMode_Reset);//從模式選擇清零
 	
-	TIM_Cmd(TIM1,ENABLE);
 	
 
-	TIM_TimeBaseInitStruct.TIM_ClockDivision=TIM_CKD_DIV1;//濾波器時鐘選擇
-	TIM_TimeBaseInitStruct.TIM_CounterMode=TIM_CounterMode_Up;//計數器模式
-	TIM_TimeBaseInitStruct.TIM_Period=65535-1;//ARR計數
-	TIM_TimeBaseInitStruct.TIM_Prescaler=72-1;//PSC預分頻器
-	TIM_TimeBaseInitStruct.TIM_RepetitionCounter=0;//重複計數器
 	TIM_TimeBaseInit(TIM4,&TIM_TimeBaseInitStruct);
 	
 
