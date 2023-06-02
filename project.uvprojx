@@ -187,7 +187,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -670,6 +670,11 @@
               <FileType>5</FileType>
               <FilePath>.\User\stm32f10x_it.h</FilePath>
             </File>
+            <File>
+              <FileName>struct.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\struct.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -716,16 +721,6 @@
               <FilePath>.\Hardware\OLED_Font.h</FilePath>
             </File>
             <File>
-              <FileName>My_I2C.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\My_I2C.c</FilePath>
-            </File>
-            <File>
-              <FileName>My_I2C.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\My_I2C.h</FilePath>
-            </File>
-            <File>
               <FileName>IC.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\IC.c</FilePath>
@@ -734,6 +729,41 @@
               <FileName>IC.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\IC.h</FilePath>
+            </File>
+            <File>
+              <FileName>Serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\Serial.c</FilePath>
+            </File>
+            <File>
+              <FileName>Serial.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\Serial.h</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\MPU6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\MPU6050.h</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6050_Reg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\MPU6050_Reg.h</FilePath>
+            </File>
+            <File>
+              <FileName>PWM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\PWM.c</FilePath>
+            </File>
+            <File>
+              <FileName>PWM.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\PWM.h</FilePath>
             </File>
           </Files>
         </Group>

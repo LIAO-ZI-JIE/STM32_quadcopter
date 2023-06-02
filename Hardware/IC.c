@@ -8,7 +8,7 @@ void IC_Init(void)
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_8|GPIO_Pin_10;
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_8|GPIO_Pin_11;
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA,&GPIO_InitStructure);
 	
@@ -39,13 +39,13 @@ void IC_Init(void)
 	TIM_PWMIConfig(TIM1,&TIM_ICInitStructure);//PWM1模式
 
 	TIM_ICInitStructure.TIM_Channel=TIM_Channel_3;
-	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Rising;//上升源觸發
-	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_DirectTI;//輸入是否交差
+	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Falling;//上升源觸發
+	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_IndirectTI;//輸入是否交差
 	TIM_ICInit(TIM1,&TIM_ICInitStructure);
 	
 	TIM_ICInitStructure.TIM_Channel=TIM_Channel_4;//輸入通道
-	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Falling;//上升源觸發
-	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_IndirectTI;//輸入是否交差
+	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Rising;//上升源觸發
+	TIM_ICInitStructure.TIM_ICSelection=TIM_ICSelection_DirectTI;//輸入是否交差
 	TIM_ICInit(TIM1,&TIM_ICInitStructure);	
 
 	
