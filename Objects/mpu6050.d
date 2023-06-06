@@ -29,3 +29,4 @@
 .\objects\mpu6050.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\mpu6050.o: .\Libaray\misc.h
 .\objects\mpu6050.o: Hardware\MPU6050_Reg.h
+.\objects\mpu6050.o: .\User\Struct.h

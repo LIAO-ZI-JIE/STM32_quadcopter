@@ -1,6 +1,6 @@
 #include "stm32f10x.h"                  // Device header
 #include "MPU6050_Reg.h"
-
+#include "Struct.h"
 #define MPU6050_ADDRESS		0xD0
 
 void MPU6050_WaitEvent(I2C_TypeDef* I2Cx, uint32_t I2C_EVENT)
@@ -77,8 +77,8 @@ void MPU6050_Init(void)
 	
 	I2C_InitTypeDef I2C_InitStructure;
 	I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
-	I2C_InitStructure.I2C_ClockSpeed = 50000;
-	I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_2;
+	I2C_InitStructure.I2C_ClockSpeed = 400000;
+	I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_16_9 ;
 	I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
 	I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 	I2C_InitStructure.I2C_OwnAddress1 = 0x00;
@@ -128,3 +128,88 @@ void MPU6050_GetData(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
 	DataL = MPU6050_ReadReg(MPU6050_GYRO_ZOUT_L);
 	*GyroZ = (DataH << 8) | DataL;
 }
+
+
+void MPU6050_ReadReg_continuous(uint8_t RegAddress,IMU_Struct *IMU_Structure)
+{
+	I2C_GenerateSTART(I2C2, ENABLE);
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_MODE_SELECT);
+	
+	I2C_Send7bitAddress(I2C2, MPU6050_ADDRESS, I2C_Direction_Transmitter);
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED);
+	
+	I2C_SendData(I2C2, RegAddress);
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_TRANSMITTED);
+	
+	I2C_GenerateSTART(I2C2, ENABLE);
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_MODE_SELECT);
+	
+	I2C_Send7bitAddress(I2C2, MPU6050_ADDRESS, I2C_Direction_Receiver);
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED);
+	
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->AccX = ((I2C_ReceiveData(I2C2))<<8);	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->AccX |= (I2C_ReceiveData(I2C2));	
+	
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->AccY = ((I2C_ReceiveData(I2C2))<<8);	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->AccY |= (I2C_ReceiveData(I2C2));	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->AccZ = ((I2C_ReceiveData(I2C2))<<8);	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->AccZ |= (I2C_ReceiveData(I2C2));	
+	
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->Temp = ((I2C_ReceiveData(I2C2))<<8);	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->Temp |= (I2C_ReceiveData(I2C2));	
+	
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->GyroX = ((I2C_ReceiveData(I2C2))<<8);	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->GyroX |= (I2C_ReceiveData(I2C2));
+	
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->GyroY = ((I2C_ReceiveData(I2C2))<<8);	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->GyroY |= (I2C_ReceiveData(I2C2));	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->GyroZ = ((I2C_ReceiveData(I2C2))<<8);	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->GyroZ |= (I2C_ReceiveData(I2C2));
+	
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->MagX = ((I2C_ReceiveData(I2C2))<<8);	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->MagY |= (I2C_ReceiveData(I2C2));	
+	
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->MagY = ((I2C_ReceiveData(I2C2))<<8);	
+
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->MagX |= (I2C_ReceiveData(I2C2));	
+	
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->MagZ = ((I2C_ReceiveData(I2C2))<<8);	
+
+	I2C_AcknowledgeConfig(I2C2, DISABLE);
+	I2C_GenerateSTOP(I2C2, ENABLE);
+	
+	MPU6050_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	IMU_Structure->MagZ |= (I2C_ReceiveData(I2C2));
+	
+	I2C_AcknowledgeConfig(I2C2, ENABLE);
+}
+

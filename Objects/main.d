@@ -30,7 +30,9 @@
 .\objects\main.o: .\Libaray\misc.h
 .\objects\main.o: .\Hardware\OLED.h
 .\objects\main.o: .\Hardware\IC.h
+.\objects\main.o: User\Struct.h
 .\objects\main.o: .\Hardware\MPU6050.h
+.\objects\main.o: .\Hardware\MPU6050_Reg.h
 .\objects\main.o: .\Hardware\Serial.h
 .\objects\main.o: C:\keil\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: .\Hardware\PWM.h

@@ -52,7 +52,7 @@
           <OutputName>project</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
@@ -671,9 +671,19 @@
               <FilePath>.\User\stm32f10x_it.h</FilePath>
             </File>
             <File>
-              <FileName>struct.h</FileName>
+              <FileName>Struct.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\User\struct.h</FilePath>
+              <FilePath>.\User\Struct.h</FilePath>
+            </File>
+            <File>
+              <FileName>imu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\imu.c</FilePath>
+            </File>
+            <File>
+              <FileName>imu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\imu.h</FilePath>
             </File>
           </Files>
         </Group>
