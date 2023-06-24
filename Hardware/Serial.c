@@ -21,15 +21,15 @@ void Serial_Init(void)
 	
 	
 	USART_InitTypeDef USART_InitStructure;
-	USART_InitStructure.USART_BaudRate=115200;//�j�v
-	USART_InitStructure.USART_HardwareFlowControl=USART_HardwareFlowControl_None;//�y��
-	USART_InitStructure.USART_Mode=USART_Mode_Tx|USART_Mode_Rx ;//��f�Ҧ�(��J�ο�X)
-	USART_InitStructure.USART_Parity=USART_Parity_No;//�ƾڸ����
-	USART_InitStructure.USART_StopBits=USART_StopBits_1;//��������
-	USART_InitStructure.USART_WordLength=USART_WordLength_8b;//�ƾڪ���
+	USART_InitStructure.USART_BaudRate=115200;//鮑率
+	USART_InitStructure.USART_HardwareFlowControl=USART_HardwareFlowControl_None;//流控
+	USART_InitStructure.USART_Mode=USART_Mode_Tx|USART_Mode_Rx ;//收發模式
+	USART_InitStructure.USART_Parity=USART_Parity_No;//較驗位
+	USART_InitStructure.USART_StopBits=USART_StopBits_1;//停止位
+	USART_InitStructure.USART_WordLength=USART_WordLength_8b;//數據長度
 	USART_Init(USART1,&USART_InitStructure);
 	
-	USART_ITConfig(USART1,USART_IT_RXNE,ENABLE);//�}�ұ������_
+	USART_ITConfig(USART1,USART_IT_RXNE,ENABLE);//中斷
 	
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	NVIC_InitTypeDef NVIC_InitStructure;
@@ -109,7 +109,12 @@ uint8_t Serial_GetRxFlag(void)
 
 
 uint8_t testdatatosend[50];
-/*波形显示函数*/
+
+/**
+  * @brief  上位機的自訂數據一
+  * @param  需要傳送的數據共10位 
+  * @retval 無
+  */
 void Test_Send_User(uint16_t data1, uint16_t data2, uint16_t data3,uint16_t data4,uint16_t data5,uint16_t data6,uint16_t data7,uint16_t data8,uint16_t data9,uint16_t data10)
 {
     vu8 _cnt=0;
@@ -170,9 +175,12 @@ void Test_Send_User(uint16_t data1, uint16_t data2, uint16_t data3,uint16_t data
 *下面的函数主要用于无人机调试，也可用于其他pid调试
 *
 ***************************************************************************************/
- 
-/*发送陀螺仪数据给上位机*/
-void Test_Send_User1(int16_t acc_x_,int16_t acc_y_,int16_t acc_z_,int16_t gyro_x_,int16_t gyro_y_,int16_t gyro_z_,int16_t roll_,int16_t pitch_,int16_t yaw_)
+/**
+   * @brief  向上位機發送陀螺儀數據與姿態角
+   * @param  acc,gyro,mag,pitch,yaw,roll
+   * @retval 無
+   */
+void Test_Send_User1(int16_t acc_x_,int16_t acc_y_,int16_t acc_z_,int16_t gyro_x_,int16_t gyro_y_,int16_t gyro_z_,int16_t mag_x_,int16_t mag_y_,int16_t mag_z_,int16_t roll_,int16_t pitch_,int16_t yaw_)
 {
 	 vu8 _cnt=0;
     vu8 sum=0;
@@ -196,18 +204,20 @@ void Test_Send_User1(int16_t acc_x_,int16_t acc_y_,int16_t acc_z_,int16_t gyro_x
  
     testdatatosend[_cnt++]=gyro_y_>>8;
     testdatatosend[_cnt++]=gyro_y_&0xff;
- 
+
     testdatatosend[_cnt++]=gyro_z_>>8;
     testdatatosend[_cnt++]=gyro_z_&0xff;
+	
+    testdatatosend[_cnt++]=mag_x_>>8;
+    testdatatosend[_cnt++]=mag_x_&0xff;
 		
-		testdatatosend[_cnt++]=0;
-		testdatatosend[_cnt++]=0;
+    testdatatosend[_cnt++]=mag_y_>>8;
+    testdatatosend[_cnt++]=mag_y_&0xff;
 		
-		testdatatosend[_cnt++]=0;
-		testdatatosend[_cnt++]=0;
+    testdatatosend[_cnt++]=mag_z_>>8;
+    testdatatosend[_cnt++]=mag_z_&0xff;
 		
-		testdatatosend[_cnt++]=0;
-		testdatatosend[_cnt++]=0;
+
  
     testdatatosend[_cnt++]=roll_>>8;
     testdatatosend[_cnt++]=roll_&0xff;

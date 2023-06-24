@@ -12,7 +12,7 @@
 #include "stm32f10x.h"                  // Device header
 #include "math.h"
 #include "Struct.h"
-#include "mpu6050.h"
+#include "mpu9250.h"
 
 
 #define Kp_New      0.9f              //互补滤波当前数据的权重

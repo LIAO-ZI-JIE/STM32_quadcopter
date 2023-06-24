@@ -30,4 +30,4 @@
 .\objects\imu.o: .\Libaray\misc.h
 .\objects\imu.o: C:\keil\ARM\ARMCC\Bin\..\include\math.h
 .\objects\imu.o: .\User\Struct.h
-.\objects\imu.o: .\Hardware\mpu6050.h
+.\objects\imu.o: .\Hardware\mpu9250.h

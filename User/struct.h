@@ -46,6 +46,7 @@ typedef struct PID
   float OutPut;   
   uint8_t Ilimit_flag;    //积分分离	
 }PID_TYPE; 
+
 #endif
 
 

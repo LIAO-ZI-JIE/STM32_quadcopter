@@ -700,6 +700,16 @@
               <FileType>5</FileType>
               <FilePath>.\System\Delay.h</FilePath>
             </File>
+            <File>
+              <FileName>Timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\Timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\Timer.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -751,21 +761,6 @@
               <FilePath>.\Hardware\Serial.h</FilePath>
             </File>
             <File>
-              <FileName>MPU6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\MPU6050.c</FilePath>
-            </File>
-            <File>
-              <FileName>MPU6050.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\MPU6050.h</FilePath>
-            </File>
-            <File>
-              <FileName>MPU6050_Reg.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\MPU6050_Reg.h</FilePath>
-            </File>
-            <File>
               <FileName>PWM.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\PWM.c</FilePath>
@@ -774,6 +769,21 @@
               <FileName>PWM.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\PWM.h</FilePath>
+            </File>
+            <File>
+              <FileName>MPU9250.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\MPU9250.c</FilePath>
+            </File>
+            <File>
+              <FileName>MPU9250.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\MPU9250.h</FilePath>
+            </File>
+            <File>
+              <FileName>MPU9250_Reg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\MPU9250_Reg.h</FilePath>
             </File>
           </Files>
         </Group>
