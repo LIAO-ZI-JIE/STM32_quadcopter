@@ -1,6 +1,9 @@
 #include "stm32f10x.h"                  // Device header
 #include "MPU9250_Reg.h"
+#include <stdlib.h>
+#include <Math.h>
 #include "Struct.h"
+#include "Matrix.h"
 #include "Delay.h"
 #define MPU9250_ADDRESS		0xD0
 
@@ -362,3 +365,117 @@ void READ_MPU9250_MAG(IMU_Struct *IMU_Structure)
 		 IMU_Structure->MagZ=((BUF[5]<<8)|BUF[4])*(((z_axis-128)>>8)+1);	
 	}					       
 }
+
+void MPU9250_Calibrate_Calculate(float input[6][3])
+{
+	float Ox,Oy,Oz,Rx,Ry,Rz;
+	float** K = MakeMat(6);
+	float* matrix6_1=Make6_1Matrix();
+	// Matrix_input(K,matrix6_1,101.337205935947,131.172918165603,502.676396433907);
+	// Matrix_input(K,matrix6_1,159.509326414305,251.156295969072,269.250000017474);
+	// Matrix_input(K,matrix6_1,74.0641529086098,265.804486765913,265.804486765913);	
+	// Matrix_input(K,matrix6_1,265.804486765913,181.950505227651,414.54463162164);
+	// Matrix_input(K,matrix6_1,29.8372324206984,-35.7615518330834,342.856728256145);
+	// Matrix_input(K,matrix6_1,129.494077118401,89.4477295320249,478.638676558308);
+
+	// Matrix_input(K,matrix6_1,87, -52, -4454);
+	// Matrix_input(K,matrix6_1,-3805, -24, -390);
+	// Matrix_input(K,matrix6_1,4389, 6, -228);	
+	// Matrix_input(K,matrix6_1,-1963, -13, -3797);
+	// Matrix_input(K,matrix6_1,4389, 6, -228);
+	// Matrix_input(K,matrix6_1,327, -2047, -3880);
+	
+	Matrix_input(K,matrix6_1,1.1, 0, 0.1);
+	Matrix_input(K,matrix6_1,-1.1, 0.123, -0.1);
+	Matrix_input(K,matrix6_1,0.1, 1.1, -0.2);	
+	Matrix_input(K,matrix6_1,0.11, -1.2, -0.1253);
+	Matrix_input(K,matrix6_1,0.11, 0.114, 1.3);
+	Matrix_input(K,matrix6_1,0.2, -0.07, -1.2);
+	
+	// Matrix_input(K,matrix6_1,1, 0, 0);
+	// Matrix_input(K,matrix6_1,-1, 0, 0);
+	// Matrix_input(K,matrix6_1,0, 1, 0);	
+	// Matrix_input(K,matrix6_1,0, -1, 0);
+	// Matrix_input(K,matrix6_1,0, 0, 1);
+	// Matrix_input(K,matrix6_1,0,0, -1);
+	
+	float** Kt = Matrix_Transpose(K);
+	float** KtK=Matrix_Multiply(Kt,K);
+	free_Matrix(K);
+	float** KtK_inverse = Matrix_inverse(KtK);
+	free_Matrix(KtK);
+	float** KtK_inverseKt=Matrix_Multiply(KtK_inverse,Kt);
+	free_Matrix(Kt);
+	free_Matrix(KtK_inverse);
+	float* matrix6_1_result=Matrix6_1_Multiply(KtK_inverseKt,matrix6_1);
+	free_Matrix(KtK_inverseKt);
+	
+	Ox=-matrix6_1_result[2]/2;
+	Oy=-matrix6_1_result[3]/(2*matrix6_1_result[0]);
+	Oz=-matrix6_1_result[4]/(2*matrix6_1_result[1]);
+	Rx=sqrt(Ox*Ox+matrix6_1_result[0]*Oy*Oy+matrix6_1_result[1]*Oz*Oz-matrix6_1_result[5]);
+	Ry=sqrt(Rx*Rx/matrix6_1_result[0]);
+	Rz=sqrt(Rx*Rx/matrix6_1_result[1]);
+
+	// printf("\nY\n");
+	// printf("%f  ",matrix6_1[0]);
+	// printf("%f  ",matrix6_1[1]);
+	// printf("%f  ",matrix6_1[2]);
+	// printf("%f  ",matrix6_1[3]);
+	// printf("%f  ",matrix6_1[4]);
+	// printf("%f  ",matrix6_1[5]);
+
+	// printf("\nabc\n");
+	// printf("%f  ",matrix6_1_result[0]);
+	// printf("%f  ",matrix6_1_result[1]);
+	// printf("%f  ",matrix6_1_result[2]);
+	// printf("%f  ",matrix6_1_result[3]);
+	// printf("%f  ",matrix6_1_result[4]);
+	// printf("%f  ",matrix6_1_result[5]);
+
+	//	printf("\noR\n");
+	//	printf("%f  ",Ox);
+	//	printf("%f  ",Oy);
+	//	printf("%f  ",Oz);
+	//	printf("%f  ",Rx);
+	//	printf("%f  ",Ry);
+	//	printf("%f  ",Rz);
+
+	// printf("\n原矩阵:>");
+	// print(K);
+	// printf("轉置矩阵:>");
+	// print(Kt);
+	// printf("矩陣相乘:>");
+	// print(KtK);	
+	// printf("逆矩阵:>");
+	// print(KtK_inverse);
+	// printf("\n逆矩阵*Kt:>");
+	// print(KtK_inverseKt);	
+	free(matrix6_1);
+	free(matrix6_1_result);
+	
+}
+
+void MPU9250_Calibrate_PrepareData(IMU_Struct *IMU_Structure)
+{
+	static int time;
+	static int flag=0;
+	static float MPU9250_Gyro_Data[6][3];
+	if(time>=10)
+	{		
+		if(flag==6)
+		{
+			MPU9250_Calibrate_Calculate(MPU9250_Gyro_Data);
+		
+		}
+		MPU9250_Gyro_Data[flag][0]=IMU_Structure->GyroX;
+		MPU9250_Gyro_Data[flag][1]=IMU_Structure->GyroY;
+		MPU9250_Gyro_Data[flag][2]=IMU_Structure->GyroZ;
+		flag++;
+
+	}
+	
+	
+
+}
+

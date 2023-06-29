@@ -29,5 +29,8 @@
 .\objects\mpu9250.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\mpu9250.o: .\Libaray\misc.h
 .\objects\mpu9250.o: Hardware\MPU9250_Reg.h
+.\objects\mpu9250.o: C:\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\mpu9250.o: C:\keil\ARM\ARMCC\Bin\..\include\Math.h
 .\objects\mpu9250.o: .\User\Struct.h
+.\objects\mpu9250.o: .\Math\Matrix.h
 .\objects\mpu9250.o: .\System\Delay.h

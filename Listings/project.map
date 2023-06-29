@@ -232,6 +232,25 @@ Section Cross References
     mpu9250.o(i.AK8963_WriteReg) refers to stm32f10x_i2c.o(i.I2C_Send7bitAddress) for I2C_Send7bitAddress
     mpu9250.o(i.AK8963_WriteReg) refers to stm32f10x_i2c.o(i.I2C_SendData) for I2C_SendData
     mpu9250.o(i.AK8963_WriteReg) refers to stm32f10x_i2c.o(i.I2C_GenerateSTOP) for I2C_GenerateSTOP
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to matrix.o(i.MakeMat) for MakeMat
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to matrix.o(i.Make6_1Matrix) for Make6_1Matrix
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to matrix.o(i.Matrix_input) for Matrix_input
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to matrix.o(i.Matrix_Transpose) for Matrix_Transpose
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to matrix.o(i.Matrix_Multiply) for Matrix_Multiply
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to matrix.o(i.free_Matrix) for free_Matrix
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to matrix.o(i.Matrix_inverse) for Matrix_inverse
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to matrix.o(i.Matrix6_1_Multiply) for Matrix6_1_Multiply
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to fdiv.o(.text) for __aeabi_fdiv
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to fmul.o(.text) for __aeabi_fmul
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to fadd.o(.text) for __aeabi_fadd
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to f2d.o(.text) for __aeabi_f2d
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to sqrt.o(i.sqrt) for sqrt
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to d2f.o(.text) for __aeabi_d2f
+    mpu9250.o(i.MPU9250_Calibrate_Calculate) refers to malloc.o(i.free) for free
+    mpu9250.o(i.MPU9250_Calibrate_PrepareData) refers to mpu9250.o(i.MPU9250_Calibrate_Calculate) for MPU9250_Calibrate_Calculate
+    mpu9250.o(i.MPU9250_Calibrate_PrepareData) refers to fflti.o(.text) for __aeabi_i2f
+    mpu9250.o(i.MPU9250_Calibrate_PrepareData) refers to mpu9250.o(.data) for time
+    mpu9250.o(i.MPU9250_Calibrate_PrepareData) refers to mpu9250.o(.bss) for MPU9250_Gyro_Data
     mpu9250.o(i.MPU9250_GetData) refers to mpu9250.o(i.MPU9250_ReadReg) for MPU9250_ReadReg
     mpu9250.o(i.MPU9250_GetID) refers to mpu9250.o(i.MPU9250_ReadReg) for MPU9250_ReadReg
     mpu9250.o(i.MPU9250_Init) refers to stm32f10x_rcc.o(i.RCC_APB1PeriphClockCmd) for RCC_APB1PeriphClockCmd
@@ -263,6 +282,29 @@ Section Cross References
     mpu9250.o(i.MPU9250_WriteReg) refers to stm32f10x_i2c.o(i.I2C_SendData) for I2C_SendData
     mpu9250.o(i.MPU9250_WriteReg) refers to stm32f10x_i2c.o(i.I2C_GenerateSTOP) for I2C_GenerateSTOP
     mpu9250.o(i.READ_MPU9250_MAG) refers to mpu9250.o(i.AK8963_ReadReg) for AK8963_ReadReg
+    matrix.o(i.Make6_1Matrix) refers to malloc.o(i.malloc) for malloc
+    matrix.o(i.MakeMat) refers to malloc.o(i.malloc) for malloc
+    matrix.o(i.Matrix6_1_Multiply) refers to matrix.o(i.Make6_1Matrix) for Make6_1Matrix
+    matrix.o(i.Matrix6_1_Multiply) refers to fmul.o(.text) for __aeabi_fmul
+    matrix.o(i.Matrix6_1_Multiply) refers to fadd.o(.text) for __aeabi_fadd
+    matrix.o(i.Matrix_Multiply) refers to matrix.o(i.MakeMat) for MakeMat
+    matrix.o(i.Matrix_Multiply) refers to fmul.o(.text) for __aeabi_fmul
+    matrix.o(i.Matrix_Multiply) refers to fadd.o(.text) for __aeabi_fadd
+    matrix.o(i.Matrix_Transpose) refers to matrix.o(i.MakeMat) for MakeMat
+    matrix.o(i.Matrix_input) refers to fmul.o(.text) for __aeabi_fmul
+    matrix.o(i.Matrix_inverse) refers to malloc.o(i.malloc) for malloc
+    matrix.o(i.Matrix_inverse) refers to memseta.o(.text) for __aeabi_memclr4
+    matrix.o(i.Matrix_inverse) refers to memcpya.o(.text) for __aeabi_memcpy4
+    matrix.o(i.Matrix_inverse) refers to f2d.o(.text) for __aeabi_f2d
+    matrix.o(i.Matrix_inverse) refers to d2f.o(.text) for __aeabi_d2f
+    matrix.o(i.Matrix_inverse) refers to cdrcmple.o(.text) for __aeabi_cdrcmple
+    matrix.o(i.Matrix_inverse) refers to cfcmple.o(.text) for __aeabi_cfcmpeq
+    matrix.o(i.Matrix_inverse) refers to fdiv.o(.text) for __aeabi_fdiv
+    matrix.o(i.Matrix_inverse) refers to fmul.o(.text) for __aeabi_fmul
+    matrix.o(i.Matrix_inverse) refers to fadd.o(.text) for __aeabi_fadd
+    matrix.o(i.Matrix_inverse) refers to ddiv.o(.text) for __aeabi_ddiv
+    matrix.o(i.Matrix_inverse) refers to matrix.o(i.free_Matrix) for free_Matrix
+    matrix.o(i.free_Matrix) refers to malloc.o(i.free) for free
     asin.o(i.__softfp_asin) refers (Special) to iusefp.o(.text) for __I$use$fp
     asin.o(i.__softfp_asin) refers to asin.o(i.asin) for asin
     asin.o(i.asin) refers (Special) to iusefp.o(.text) for __I$use$fp
@@ -309,6 +351,20 @@ Section Cross References
     atan2_x.o(i.__atan2$lsc) refers to ddiv.o(.text) for __aeabi_ddiv
     atan2_x.o(i.__atan2$lsc) refers to dadd.o(.text) for __aeabi_dsub
     atan2_x.o(i.__atan2$lsc) refers to qnan.o(.constdata) for __mathlib_zero
+    sqrt.o(i.__softfp_sqrt) refers (Special) to iusefp.o(.text) for __I$use$fp
+    sqrt.o(i.__softfp_sqrt) refers to dsqrt.o(.text) for _dsqrt
+    sqrt.o(i.__softfp_sqrt) refers to errno.o(i.__set_errno) for __set_errno
+    sqrt.o(i.sqrt) refers (Special) to iusefp.o(.text) for __I$use$fp
+    sqrt.o(i.sqrt) refers to dsqrt.o(.text) for _dsqrt
+    sqrt.o(i.sqrt) refers to errno.o(i.__set_errno) for __set_errno
+    sqrt_x.o(i.____softfp_sqrt$lsc) refers (Special) to iusefp.o(.text) for __I$use$fp
+    sqrt_x.o(i.____softfp_sqrt$lsc) refers to cdcmple.o(.text) for __aeabi_cdcmple
+    sqrt_x.o(i.____softfp_sqrt$lsc) refers to errno.o(i.__set_errno) for __set_errno
+    sqrt_x.o(i.____softfp_sqrt$lsc) refers to dsqrt.o(.text) for _dsqrt
+    sqrt_x.o(i.__sqrt$lsc) refers (Special) to iusefp.o(.text) for __I$use$fp
+    sqrt_x.o(i.__sqrt$lsc) refers to cdcmple.o(.text) for __aeabi_cdcmple
+    sqrt_x.o(i.__sqrt$lsc) refers to errno.o(i.__set_errno) for __set_errno
+    sqrt_x.o(i.__sqrt$lsc) refers to dsqrt.o(.text) for _dsqrt
     entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry10a.o(.ARM.Collect$$$$0000000D) for __rt_final_cpp
     entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry11a.o(.ARM.Collect$$$$0000000F) for __rt_final_exit
     entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry7b.o(.ARM.Collect$$$$00000008) for _main_clock
@@ -359,6 +415,38 @@ Section Cross References
     printfa.o(i._printf_pre_padding) refers (Special) to iusefp.o(.text) for __I$use$fp
     printfa.o(i._snputc) refers (Special) to iusefp.o(.text) for __I$use$fp
     printfa.o(i._sputc) refers (Special) to iusefp.o(.text) for __I$use$fp
+    malloc.o(i.free) refers to mvars.o(.data) for __microlib_freelist
+    malloc.o(i.malloc) refers to mvars.o(.data) for __microlib_freelist_initialised
+    malloc.o(i.malloc) refers to mvars.o(.data) for __microlib_freelist
+    malloc.o(i.malloc) refers to startup_stm32f10x_md.o(HEAP) for __heap_base
+    mallocr.o(i.__free$realloc) refers to mvars.o(.data) for __microlib_freelist
+    mallocr.o(i.__malloc$realloc) refers to mallocr.o(i.internal_alloc) for internal_alloc
+    mallocr.o(i.__malloc$realloc) refers to mvars.o(.data) for __microlib_freelist_initialised
+    mallocr.o(i.__malloc$realloc) refers to startup_stm32f10x_md.o(HEAP) for __heap_base
+    mallocr.o(i.__malloc$realloc) refers to mvars.o(.data) for __microlib_freelist
+    mallocr.o(i.internal_alloc) refers to memcpya.o(.text) for __aeabi_memcpy
+    mallocr.o(i.internal_alloc) refers to mvars.o(.data) for __microlib_freelist
+    mallocr.o(i.realloc) refers to mallocr.o(i.__free$realloc) for __free$realloc
+    mallocr.o(i.realloc) refers to mallocr.o(i.internal_alloc) for internal_alloc
+    mallocr.o(i.realloc) refers to mallocr.o(i.__malloc$realloc) for __malloc$realloc
+    mallocr.o(i.realloc) refers to mvars.o(.data) for __microlib_freelist
+    malloca.o(i.__aligned_malloc) refers to mvars.o(.data) for __microlib_freelist_initialised
+    malloca.o(i.__aligned_malloc) refers to mvars.o(.data) for __microlib_freelist
+    malloca.o(i.__aligned_malloc) refers to startup_stm32f10x_md.o(HEAP) for __heap_base
+    malloca.o(i.__free$memalign) refers to mvars.o(.data) for __microlib_freelist
+    malloca.o(i.__malloc$memalign) refers to malloca.o(i.__aligned_malloc) for __aligned_malloc
+    mallocra.o(i.__aligned_malloc$realloc) refers to mallocra.o(i.internal_alloc) for internal_alloc
+    mallocra.o(i.__aligned_malloc$realloc) refers to mvars.o(.data) for __microlib_freelist_initialised
+    mallocra.o(i.__aligned_malloc$realloc) refers to startup_stm32f10x_md.o(HEAP) for __heap_base
+    mallocra.o(i.__aligned_malloc$realloc) refers to mvars.o(.data) for __microlib_freelist
+    mallocra.o(i.__free$realloc$memalign) refers to mvars.o(.data) for __microlib_freelist
+    mallocra.o(i.__malloc$realloc$memalign) refers to mallocra.o(i.__aligned_malloc$realloc) for __aligned_malloc$realloc
+    mallocra.o(i.__realloc$memalign) refers to mallocra.o(i.__free$realloc$memalign) for __free$realloc$memalign
+    mallocra.o(i.__realloc$memalign) refers to mallocra.o(i.internal_alloc) for internal_alloc
+    mallocra.o(i.__realloc$memalign) refers to mallocra.o(i.__malloc$realloc$memalign) for __malloc$realloc$memalign
+    mallocra.o(i.__realloc$memalign) refers to mvars.o(.data) for __microlib_freelist
+    mallocra.o(i.internal_alloc) refers to memcpya.o(.text) for __aeabi_memcpy
+    mallocra.o(i.internal_alloc) refers to mvars.o(.data) for __microlib_freelist
     fadd.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
     fadd.o(.text) refers to fepilogue.o(.text) for _float_epilogue
     fmul.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
@@ -366,10 +454,13 @@ Section Cross References
     fdiv.o(.text) refers to fepilogue.o(.text) for _float_round
     dmul.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
     dmul.o(.text) refers to depilogue.o(.text) for _double_epilogue
+    ddiv.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
+    ddiv.o(.text) refers to depilogue.o(.text) for _double_round
     fflti.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
     fflti.o(.text) refers to fepilogue.o(.text) for _float_epilogue
     ffixui.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
     f2d.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
+    cdrcmple.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
     d2f.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
     d2f.o(.text) refers to fepilogue.o(.text) for _float_round
     cfcmple.o(.text) refers (Special) to iusefp.o(.text) for __I$use$fp
@@ -409,20 +500,6 @@ Section Cross References
     poly.o(i.__kernel_poly) refers to dmul.o(.text) for __aeabi_dmul
     poly.o(i.__kernel_poly) refers to dadd.o(.text) for __aeabi_dadd
     qnan.o(.constdata) refers (Special) to iusefp.o(.text) for __I$use$fp
-    sqrt.o(i.__softfp_sqrt) refers (Special) to iusefp.o(.text) for __I$use$fp
-    sqrt.o(i.__softfp_sqrt) refers to dsqrt.o(.text) for _dsqrt
-    sqrt.o(i.__softfp_sqrt) refers to errno.o(i.__set_errno) for __set_errno
-    sqrt.o(i.sqrt) refers (Special) to iusefp.o(.text) for __I$use$fp
-    sqrt.o(i.sqrt) refers to dsqrt.o(.text) for _dsqrt
-    sqrt.o(i.sqrt) refers to errno.o(i.__set_errno) for __set_errno
-    sqrt_x.o(i.____softfp_sqrt$lsc) refers (Special) to iusefp.o(.text) for __I$use$fp
-    sqrt_x.o(i.____softfp_sqrt$lsc) refers to cdcmple.o(.text) for __aeabi_cdcmple
-    sqrt_x.o(i.____softfp_sqrt$lsc) refers to errno.o(i.__set_errno) for __set_errno
-    sqrt_x.o(i.____softfp_sqrt$lsc) refers to dsqrt.o(.text) for _dsqrt
-    sqrt_x.o(i.__sqrt$lsc) refers (Special) to iusefp.o(.text) for __I$use$fp
-    sqrt_x.o(i.__sqrt$lsc) refers to cdcmple.o(.text) for __aeabi_cdcmple
-    sqrt_x.o(i.__sqrt$lsc) refers to errno.o(i.__set_errno) for __set_errno
-    sqrt_x.o(i.__sqrt$lsc) refers to dsqrt.o(.text) for _dsqrt
     entry2.o(.ARM.Collect$$$$00000001) refers to entry2.o(.ARM.Collect$$$$00002712) for __lit__00000000
     entry2.o(.ARM.Collect$$$$00002712) refers to startup_stm32f10x_md.o(STACK) for __initial_sp
     entry2.o(__vectab_stack_and_reset_area) refers to startup_stm32f10x_md.o(STACK) for __initial_sp
@@ -440,12 +517,11 @@ Section Cross References
     dadd.o(.text) refers to llshl.o(.text) for __aeabi_llsl
     dadd.o(.text) refers to llsshr.o(.text) for __aeabi_lasr
     dadd.o(.text) refers to depilogue.o(.text) for _double_epilogue
-    ddiv.o(.text) refers to depilogue.o(.text) for _double_round
+    dsqrt.o(.text) refers to llushr.o(.text) for __aeabi_llsr
+    dsqrt.o(.text) refers to depilogue.o(.text) for _double_round
     dfixul.o(.text) refers to llushr.o(.text) for __aeabi_llsr
     dfixul.o(.text) refers to llshl.o(.text) for __aeabi_llsl
     init.o(.text) refers to entry5.o(.ARM.Collect$$$$00000004) for __main_after_scatterload
-    dsqrt.o(.text) refers to llushr.o(.text) for __aeabi_llsr
-    dsqrt.o(.text) refers to depilogue.o(.text) for _double_round
 
 
 ==============================================================================
@@ -894,30 +970,42 @@ Removing Unused input sections from the image.
     Removing serial.o(i.Test_Send_User3), (356 bytes).
     Removing serial.o(i.Test_Send_User4), (456 bytes).
     Removing serial.o(i.fputc), (16 bytes).
+    Removing mpu9250.o(i.MPU9250_Calibrate_Calculate), (496 bytes).
+    Removing mpu9250.o(i.MPU9250_Calibrate_PrepareData), (120 bytes).
     Removing mpu9250.o(i.MPU9250_GetData), (172 bytes).
     Removing mpu9250.o(i.MPU9250_GetID), (10 bytes).
     Removing mpu9250.o(i.MPU9250_ReadReg), (152 bytes).
     Removing mpu9250.o(i.READ_MPU9250_MAG), (336 bytes).
+    Removing mpu9250.o(.bss), (72 bytes).
+    Removing mpu9250.o(.data), (8 bytes).
+    Removing matrix.o(i.Make6_1Matrix), (14 bytes).
+    Removing matrix.o(i.MakeMat), (38 bytes).
+    Removing matrix.o(i.Matrix6_1_Multiply), (76 bytes).
+    Removing matrix.o(i.Matrix_Multiply), (106 bytes).
+    Removing matrix.o(i.Matrix_Transpose), (56 bytes).
+    Removing matrix.o(i.Matrix_input), (170 bytes).
+    Removing matrix.o(i.Matrix_inverse), (568 bytes).
+    Removing matrix.o(i.free_Matrix), (30 bytes).
     Removing fadd.o(.text), (176 bytes).
     Removing fmul.o(.text), (100 bytes).
     Removing fdiv.o(.text), (124 bytes).
     Removing dmul.o(.text), (228 bytes).
+    Removing ddiv.o(.text), (222 bytes).
     Removing fflti.o(.text), (18 bytes).
     Removing ffixui.o(.text), (40 bytes).
     Removing f2d.o(.text), (38 bytes).
+    Removing cdrcmple.o(.text), (48 bytes).
     Removing d2f.o(.text), (56 bytes).
     Removing cfcmple.o(.text), (20 bytes).
     Removing fepilogue.o(.text), (110 bytes).
     Removing depilogue.o(.text), (186 bytes).
     Removing dadd.o(.text), (334 bytes).
-    Removing ddiv.o(.text), (222 bytes).
     Removing dscalb.o(.text), (46 bytes).
-    Removing dfixul.o(.text), (48 bytes).
-    Removing cdrcmple.o(.text), (48 bytes).
     Removing dsqrt.o(.text), (162 bytes).
+    Removing dfixul.o(.text), (48 bytes).
     Removing cdcmple.o(.text), (48 bytes).
 
-464 unused section(s) (total 22790 bytes) removed from the image.
+476 unused section(s) (total 24544 bytes) removed from the image.
 
 ==============================================================================
 
@@ -927,36 +1015,42 @@ Image Symbol Table
 
     Symbol Name                              Value     Ov Type        Size  Object(Section)
 
-    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  uidiv.o ABSOLUTE
+    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/errno.c                 0x00000000   Number         0  errno.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
-    ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
+    ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloc.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocr.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloca.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocra.o ABSOLUTE
+    ../clib/microlib/malloc/mvars.c          0x00000000   Number         0  mvars.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
     ../clib/microlib/stdio/streams.c         0x00000000   Number         0  stdout.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
+    ../clib/microlib/string/memset.c         0x00000000   Number         0  memseta.o ABSOLUTE
     ../clib/microlib/stubs.s                 0x00000000   Number         0  iusefp.o ABSOLUTE
     ../fplib/microlib/d2f.c                  0x00000000   Number         0  d2f.o ABSOLUTE
     ../fplib/microlib/f2d.c                  0x00000000   Number         0  f2d.o ABSOLUTE
-    ../fplib/microlib/fpadd.c                0x00000000   Number         0  fadd.o ABSOLUTE
     ../fplib/microlib/fpadd.c                0x00000000   Number         0  dadd.o ABSOLUTE
-    ../fplib/microlib/fpdiv.c                0x00000000   Number         0  fdiv.o ABSOLUTE
+    ../fplib/microlib/fpadd.c                0x00000000   Number         0  fadd.o ABSOLUTE
     ../fplib/microlib/fpdiv.c                0x00000000   Number         0  ddiv.o ABSOLUTE
+    ../fplib/microlib/fpdiv.c                0x00000000   Number         0  fdiv.o ABSOLUTE
     ../fplib/microlib/fpepilogue.c           0x00000000   Number         0  depilogue.o ABSOLUTE
     ../fplib/microlib/fpepilogue.c           0x00000000   Number         0  fepilogue.o ABSOLUTE
     ../fplib/microlib/fpfix.c                0x00000000   Number         0  ffixui.o ABSOLUTE
@@ -966,18 +1060,18 @@ Image Symbol Table
     ../fplib/microlib/fpmul.c                0x00000000   Number         0  dmul.o ABSOLUTE
     ../fplib/microlib/fpscalb.c              0x00000000   Number         0  dscalb.o ABSOLUTE
     ../fplib/microlib/fpsqrt.c               0x00000000   Number         0  dsqrt.o ABSOLUTE
-    ../mathlib/asin.c                        0x00000000   Number         0  asin_x.o ABSOLUTE
     ../mathlib/asin.c                        0x00000000   Number         0  asin.o ABSOLUTE
-    ../mathlib/atan.c                        0x00000000   Number         0  atan_x.o ABSOLUTE
+    ../mathlib/asin.c                        0x00000000   Number         0  asin_x.o ABSOLUTE
     ../mathlib/atan.c                        0x00000000   Number         0  atan.o ABSOLUTE
+    ../mathlib/atan.c                        0x00000000   Number         0  atan_x.o ABSOLUTE
     ../mathlib/atan2.c                       0x00000000   Number         0  atan2_x.o ABSOLUTE
     ../mathlib/atan2.c                       0x00000000   Number         0  atan2.o ABSOLUTE
     ../mathlib/dunder.c                      0x00000000   Number         0  dunder.o ABSOLUTE
     ../mathlib/fpclassify.c                  0x00000000   Number         0  fpclassify.o ABSOLUTE
     ../mathlib/poly.c                        0x00000000   Number         0  poly.o ABSOLUTE
     ../mathlib/qnan.c                        0x00000000   Number         0  qnan.o ABSOLUTE
-    ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt.o ABSOLUTE
     ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt_x.o ABSOLUTE
+    ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt.o ABSOLUTE
     Hardware\Button.c                        0x00000000   Number         0  button.o ABSOLUTE
     Hardware\IC.c                            0x00000000   Number         0  ic.o ABSOLUTE
     Hardware\MPU9250.c                       0x00000000   Number         0  mpu9250.o ABSOLUTE
@@ -1007,6 +1101,7 @@ Image Symbol Table
     Libaray\stm32f10x_tim.c                  0x00000000   Number         0  stm32f10x_tim.o ABSOLUTE
     Libaray\stm32f10x_usart.c                0x00000000   Number         0  stm32f10x_usart.o ABSOLUTE
     Libaray\stm32f10x_wwdg.c                 0x00000000   Number         0  stm32f10x_wwdg.o ABSOLUTE
+    Math\Matrix.c                            0x00000000   Number         0  matrix.o ABSOLUTE
     Start\\core_cm3.c                        0x00000000   Number         0  core_cm3.o ABSOLUTE
     Start\core_cm3.c                         0x00000000   Number         0  core_cm3.o ABSOLUTE
     Start\startup_stm32f10x_md.s             0x00000000   Number         0  startup_stm32f10x_md.o ABSOLUTE
@@ -1349,17 +1444,17 @@ Memory Map of the image
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x08000000   0x08000000   0x000000ec   Data   RO            3    RESET               startup_stm32f10x_md.o
-    0x080000ec   0x080000ec   0x00000000   Code   RO         3735  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x080000ec   0x080000ec   0x00000004   Code   RO         3825    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x080000f0   0x080000f0   0x00000004   Code   RO         3828    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x080000f4   0x080000f4   0x00000000   Code   RO         3830    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x080000f4   0x080000f4   0x00000000   Code   RO         3832    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x080000f4   0x080000f4   0x00000008   Code   RO         3833    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x080000fc   0x080000fc   0x00000000   Code   RO         3835    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x080000fc   0x080000fc   0x00000000   Code   RO         3837    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x080000fc   0x080000fc   0x00000004   Code   RO         3826    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x080000ec   0x080000ec   0x00000000   Code   RO         3824  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x080000ec   0x080000ec   0x00000004   Code   RO         3940    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x080000f0   0x080000f0   0x00000004   Code   RO         3943    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x080000f4   0x080000f4   0x00000000   Code   RO         3945    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x080000f4   0x080000f4   0x00000000   Code   RO         3947    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x080000f4   0x080000f4   0x00000008   Code   RO         3948    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x080000fc   0x080000fc   0x00000000   Code   RO         3950    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x080000fc   0x080000fc   0x00000000   Code   RO         3952    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x080000fc   0x080000fc   0x00000004   Code   RO         3941    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
     0x08000100   0x08000100   0x00000024   Code   RO            4    .text               startup_stm32f10x_md.o
-    0x08000124   0x08000124   0x00000024   Code   RO         3866    .text               mc_w.l(init.o)
+    0x08000124   0x08000124   0x00000024   Code   RO         3983    .text               mc_w.l(init.o)
     0x08000148   0x08000148   0x0000000a   Code   RO         3639    i.AK8963_GetID      mpu9250.o
     0x08000152   0x08000152   0x00000002   PAD
     0x08000154   0x08000154   0x00000098   Code   RO         3640    i.AK8963_ReadReg    mpu9250.o
@@ -1383,11 +1478,11 @@ Memory Map of the image
     0x08000552   0x08000552   0x00000004   Code   RO         1486    i.I2C_SendData      stm32f10x_i2c.o
     0x08000556   0x08000556   0x00000002   PAD
     0x08000558   0x08000558   0x00000194   Code   RO         3498    i.IC_Init           ic.o
-    0x080006ec   0x080006ec   0x000000c8   Code   RO         3644    i.MPU9250_Init      mpu9250.o
-    0x080007b4   0x080007b4   0x000001c8   Code   RO         3646    i.MPU9250_ReadReg_continuous  mpu9250.o
-    0x0800097c   0x0800097c   0x00000022   Code   RO         3647    i.MPU9250_WaitEvent  mpu9250.o
+    0x080006ec   0x080006ec   0x000000c8   Code   RO         3646    i.MPU9250_Init      mpu9250.o
+    0x080007b4   0x080007b4   0x000001c8   Code   RO         3648    i.MPU9250_ReadReg_continuous  mpu9250.o
+    0x0800097c   0x0800097c   0x00000022   Code   RO         3649    i.MPU9250_WaitEvent  mpu9250.o
     0x0800099e   0x0800099e   0x00000002   PAD
-    0x080009a0   0x080009a0   0x00000064   Code   RO         3648    i.MPU9250_WriteReg  mpu9250.o
+    0x080009a0   0x080009a0   0x00000064   Code   RO         3650    i.MPU9250_WriteReg  mpu9250.o
     0x08000a04   0x08000a04   0x00000004   Code   RO         3248    i.MemManage_Handler  stm32f10x_it.o
     0x08000a08   0x08000a08   0x00000002   Code   RO         3249    i.NMI_Handler       stm32f10x_it.o
     0x08000a0a   0x08000a0a   0x00000002   PAD
@@ -1474,12 +1569,12 @@ Memory Map of the image
     0x080020e4   0x080020e4   0x0000000a   Code   RO         2974    i.USART_ReceiveData  stm32f10x_usart.o
     0x080020ee   0x080020ee   0x00000008   Code   RO         2977    i.USART_SendData    stm32f10x_usart.o
     0x080020f6   0x080020f6   0x00000004   Code   RO         3253    i.UsageFault_Handler  stm32f10x_it.o
-    0x080020fa   0x080020fa   0x0000000e   Code   RO         3880    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x08002108   0x08002108   0x00000002   Code   RO         3881    i.__scatterload_null  mc_w.l(handlers.o)
-    0x0800210a   0x0800210a   0x0000000e   Code   RO         3882    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x080020fa   0x080020fa   0x0000000e   Code   RO         3993    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x08002108   0x08002108   0x00000002   Code   RO         3994    i.__scatterload_null  mc_w.l(handlers.o)
+    0x0800210a   0x0800210a   0x0000000e   Code   RO         3995    i.__scatterload_zeroinit  mc_w.l(handlers.o)
     0x08002118   0x08002118   0x00000178   Code   RO         3197    i.main              main.o
     0x08002290   0x08002290   0x000005f0   Data   RO         3404    .constdata          oled.o
-    0x08002880   0x08002880   0x00000020   Data   RO         3878    Region$$Table       anon$$obj.o
+    0x08002880   0x08002880   0x00000020   Data   RO         3991    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080028a0, Size: 0x00000460, Max: 0x00005000, ABSOLUTE)
@@ -1507,7 +1602,7 @@ Image component sizes
          0          0          0          0          0        768   imu.o
        468         30          0         18          0       2188   main.o
        132         22          0          0          0     204763   misc.o
-      1052         68          0          0          0       4557   mpu9250.o
+      1052         68          0          0          0       4669   mpu9250.o
        880         26       1520          0          0       7727   oled.o
        180          4          0          0          0        627   pwm.o
       1434         36          0          2         50       5059   serial.o
@@ -1523,7 +1618,7 @@ Image component sizes
        128          6          0          0          0        549   timer.o
 
     ----------------------------------------------------------------------
-      8526        496       1788         40       1080     381588   Object Totals
+      8526        496       1788         40       1080     381700   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         30          0          0          0          6          0   (incl. Padding)
 
@@ -1562,8 +1657,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      8612        512       1788         40       1080     376816   Grand Totals
-      8612        512       1788         40       1080     376816   ELF Image Totals
+      8612        512       1788         40       1080     376928   Grand Totals
+      8612        512       1788         40       1080     376928   ELF Image Totals
       8612        512       1788         40          0          0   ROM Totals
 
 ==============================================================================

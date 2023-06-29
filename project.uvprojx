@@ -52,7 +52,7 @@
           <OutputName>project</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\Start;.\User;.\Libaray;.\System;.\Hardware</IncludePath>
+              <IncludePath>.\Start;.\User;.\Libaray;.\System;.\Hardware;.\Math</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -784,6 +784,21 @@
               <FileName>MPU9250_Reg.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\MPU9250_Reg.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Math</GroupName>
+          <Files>
+            <File>
+              <FileName>Matrix.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Math\Matrix.c</FilePath>
+            </File>
+            <File>
+              <FileName>Matrix.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Math\Matrix.h</FilePath>
             </File>
           </Files>
         </Group>
