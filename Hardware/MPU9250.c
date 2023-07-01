@@ -5,8 +5,10 @@
 #include "Struct.h"
 #include "Matrix.h"
 #include "Delay.h"
+#include "Struct.h"
 #define MPU9250_ADDRESS		0xD0
-
+uint8_t MPU9250_Calibrate_flag=0;
+Calibrate_Struct Calibrate_Structure_Acc;
 void MPU9250_WaitEvent(I2C_TypeDef* I2Cx, uint32_t I2C_EVENT)
 {
 	uint32_t Timeout;
@@ -247,7 +249,7 @@ void MPU9250_GetData(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
 }
 
 
-void MPU9250_ReadReg_continuous(uint8_t RegAddress,IMU_Struct *IMU_Structure)
+void MPU9250_GetData_continuous(IMU_Struct *IMU_Structure)
 {
 	I2C_GenerateSTART(I2C2, ENABLE);
 	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_MODE_SELECT);
@@ -255,7 +257,7 @@ void MPU9250_ReadReg_continuous(uint8_t RegAddress,IMU_Struct *IMU_Structure)
 	I2C_Send7bitAddress(I2C2, MPU9250_ADDRESS, I2C_Direction_Transmitter);
 	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED);
 	
-	I2C_SendData(I2C2, RegAddress);
+	I2C_SendData(I2C2, ACCEL_XOUT_H);
 	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_TRANSMITTED);
 	
 	I2C_GenerateSTART(I2C2, ENABLE);
@@ -314,7 +316,7 @@ void MPU9250_ReadReg_continuous(uint8_t RegAddress,IMU_Struct *IMU_Structure)
 
 
 
-void READ_MPU9250_MAG(IMU_Struct *IMU_Structure)
+void READ_MPU9250_MAG(void)
 { 	
 	uint16_t BUF[6];	
 	u8 x_axis,y_axis,z_axis; 
@@ -336,7 +338,7 @@ void READ_MPU9250_MAG(IMU_Struct *IMU_Structure)
 		 {
 			 BUF[1]=AK8963_ReadReg(MAG_XOUT_H);
 		 }
-		 IMU_Structure->MagX=((BUF[1]<<8)|BUF[0])*(((x_axis-128)>>8)+1);		//????? ???/RM-MPU-9250A-00 PDF/ 5.13	
+		 IMU_Structure.MagX=((BUF[1]<<8)|BUF[0])*(((x_axis-128)>>8)+1);		//????? ???/RM-MPU-9250A-00 PDF/ 5.13	
 		 
 		//????Y???
 			BUF[2]=AK8963_ReadReg(MAG_YOUT_L); //Low data	
@@ -349,7 +351,7 @@ void READ_MPU9250_MAG(IMU_Struct *IMU_Structure)
 		 {
 			 BUF[3]=AK8963_ReadReg(MAG_YOUT_H);
 		 }
-		 IMU_Structure->MagY=((BUF[3]<<8)|BUF[2])*(((y_axis-128)>>8)+1);	
+		 IMU_Structure.MagY=((BUF[3]<<8)|BUF[2])*(((y_axis-128)>>8)+1);	
 		 
 		//????Z???
 		 BUF[4]=AK8963_ReadReg(MAG_ZOUT_L); //Low data	
@@ -362,13 +364,14 @@ void READ_MPU9250_MAG(IMU_Struct *IMU_Structure)
 		 {
 			 BUF[5]=AK8963_ReadReg(MAG_ZOUT_H);
 		 }
-		 IMU_Structure->MagZ=((BUF[5]<<8)|BUF[4])*(((z_axis-128)>>8)+1);	
+		 IMU_Structure.MagZ=((BUF[5]<<8)|BUF[4])*(((z_axis-128)>>8)+1);	
 	}					       
 }
 
-void MPU9250_Calibrate_Calculate(float input[6][3])
+
+void MPU9250_Calibrate_Calculate(Calibrate_Struct* Calibrate_Structure,float input[6][3])
 {
-	float Ox,Oy,Oz,Rx,Ry,Rz;
+	
 	float** K = MakeMat(6);
 	float* matrix6_1=Make6_1Matrix();
 	// Matrix_input(K,matrix6_1,101.337205935947,131.172918165603,502.676396433907);
@@ -385,12 +388,8 @@ void MPU9250_Calibrate_Calculate(float input[6][3])
 	// Matrix_input(K,matrix6_1,4389, 6, -228);
 	// Matrix_input(K,matrix6_1,327, -2047, -3880);
 	
-	Matrix_input(K,matrix6_1,1.1, 0, 0.1);
-	Matrix_input(K,matrix6_1,-1.1, 0.123, -0.1);
-	Matrix_input(K,matrix6_1,0.1, 1.1, -0.2);	
-	Matrix_input(K,matrix6_1,0.11, -1.2, -0.1253);
-	Matrix_input(K,matrix6_1,0.11, 0.114, 1.3);
-	Matrix_input(K,matrix6_1,0.2, -0.07, -1.2);
+	Matrix_input(K,matrix6_1,input);
+
 	
 	// Matrix_input(K,matrix6_1,1, 0, 0);
 	// Matrix_input(K,matrix6_1,-1, 0, 0);
@@ -410,12 +409,12 @@ void MPU9250_Calibrate_Calculate(float input[6][3])
 	float* matrix6_1_result=Matrix6_1_Multiply(KtK_inverseKt,matrix6_1);
 	free_Matrix(KtK_inverseKt);
 	
-	Ox=-matrix6_1_result[2]/2;
-	Oy=-matrix6_1_result[3]/(2*matrix6_1_result[0]);
-	Oz=-matrix6_1_result[4]/(2*matrix6_1_result[1]);
-	Rx=sqrt(Ox*Ox+matrix6_1_result[0]*Oy*Oy+matrix6_1_result[1]*Oz*Oz-matrix6_1_result[5]);
-	Ry=sqrt(Rx*Rx/matrix6_1_result[0]);
-	Rz=sqrt(Rx*Rx/matrix6_1_result[1]);
+	Calibrate_Structure->Ox=-matrix6_1_result[2]/2;
+	Calibrate_Structure->Oy=-matrix6_1_result[3]/(2*matrix6_1_result[0]);
+	Calibrate_Structure->Oz=-matrix6_1_result[4]/(2*matrix6_1_result[1]);
+	Calibrate_Structure->Rx=sqrt(Calibrate_Structure->Ox*Calibrate_Structure->Ox+matrix6_1_result[0]*Calibrate_Structure->Oy*Calibrate_Structure->Oy+matrix6_1_result[1]*Calibrate_Structure->Oz*Calibrate_Structure->Oz-matrix6_1_result[5]);
+	Calibrate_Structure->Ry=sqrt(Calibrate_Structure->Rx*Calibrate_Structure->Rx/matrix6_1_result[0]);
+	Calibrate_Structure->Rz=sqrt(Calibrate_Structure->Rx*Calibrate_Structure->Rx/matrix6_1_result[1]);
 
 	// printf("\nY\n");
 	// printf("%f  ",matrix6_1[0]);
@@ -456,26 +455,39 @@ void MPU9250_Calibrate_Calculate(float input[6][3])
 	
 }
 
-void MPU9250_Calibrate_PrepareData(IMU_Struct *IMU_Structure)
+void MPU9250_Calibrate_PrepareData(void)
 {
 	static int time;
 	static int flag=0;
 	static float MPU9250_Gyro_Data[6][3];
+	
 	if(time>=10)
 	{		
 		if(flag==6)
 		{
-			MPU9250_Calibrate_Calculate(MPU9250_Gyro_Data);
-		
+			MPU9250_Calibrate_Calculate(&Calibrate_Structure_Acc,MPU9250_Gyro_Data);
+			MPU9250_Calibrate_flag=0;
+			flag=0;
 		}
-		MPU9250_Gyro_Data[flag][0]=IMU_Structure->GyroX;
-		MPU9250_Gyro_Data[flag][1]=IMU_Structure->GyroY;
-		MPU9250_Gyro_Data[flag][2]=IMU_Structure->GyroZ;
+		MPU9250_Gyro_Data[flag][0]=IMU_Structure.GyroX;
+		MPU9250_Gyro_Data[flag][1]=IMU_Structure.GyroY;
+		MPU9250_Gyro_Data[flag][2]=IMU_Structure.GyroZ;
 		flag++;
 
 	}
-	
-	
-
 }
 
+void MPU9250_Calibrate(void)
+{
+	if(MPU9250_Calibrate_flag==1)
+	{
+		MPU9250_Calibrate_PrepareData();
+		return;
+	}
+	IMU_Structure.AccX=IMU_Structure.AccX/Calibrate_Structure_Acc.Rx+Calibrate_Structure_Acc.Ox;
+	IMU_Structure.AccY=IMU_Structure.AccY/Calibrate_Structure_Acc.Ry+Calibrate_Structure_Acc.Oy;
+	IMU_Structure.AccZ=IMU_Structure.AccZ/Calibrate_Structure_Acc.Rz+Calibrate_Structure_Acc.Oz;
+	
+
+
+}

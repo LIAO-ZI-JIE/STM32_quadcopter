@@ -3,6 +3,7 @@
 #include <stdarg.h>
 uint8_t Serial_RxData;
 uint8_t Serial_RxFlag;
+
 void Serial_Init(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);

@@ -14,12 +14,7 @@ typedef struct
 	int16_t MagZ;
 }IMU_Struct;
 
-typedef struct
-{
-	float X;
-	float Y;
-	float Z;
-}XYZ_Struct;
+
 
 typedef struct
 {
@@ -46,6 +41,26 @@ typedef struct PID
   float OutPut;   
   uint8_t Ilimit_flag;    //积分分离	
 }PID_TYPE; 
+
+typedef struct
+{
+	float Ox;
+	float Oy;
+	float Oz;
+	float Rx;
+	float Ry;
+	float Rz;
+}Calibrate_Struct;
+
+typedef struct
+{
+	float X;
+	float Y;
+	float Z;
+}XYZ_Struct;
+
+extern IMU_Struct IMU_Structure;
+extern Attitude_Struct Attitude_Structure;
 
 #endif
 
