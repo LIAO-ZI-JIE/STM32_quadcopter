@@ -9,7 +9,7 @@ void Timer_Init(void)
 	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1;//濾波器時鐘選擇
 	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up;//計數器模式
 	TIM_TimeBaseInitStructure.TIM_Period=1000-1;//ARR計數
-	TIM_TimeBaseInitStructure.TIM_Prescaler=720-1;//預分頻器
+	TIM_TimeBaseInitStructure.TIM_Prescaler=72-1;//預分頻器
 	TIM_TimeBaseInitStructure.TIM_RepetitionCounter=0;//重複計數器
 	TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStructure);
 	

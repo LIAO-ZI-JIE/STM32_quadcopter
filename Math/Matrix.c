@@ -1,6 +1,11 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+/**
+  * @brief  將矩陣釋放
+  * @param  需釋放的矩陣地址
+  * @retval 無 
+  */
 void free_Matrix(float** src)
 {
     int i;
@@ -10,7 +15,12 @@ void free_Matrix(float** src)
     }
     free(src);
 }
-
+/**
+  * 代碼來源:  http://t.csdn.cn/OQoUy
+  * @brief  將矩陣inverse
+  * @param  需要inverse的矩陣地址
+  * @retval inverse好的矩陣地址 
+  */
 float** Matrix_inverse(float** src)
 {
 	//step 1
@@ -103,7 +113,11 @@ float** Matrix_inverse(float** src)
 	return res2;
 }
 
-
+/**
+  * @brief  製作一個n*n的方陣
+  * @param  方陣的大小
+  * @retval 製作好的方陣地址 
+  */
 float** MakeMat(int n)
 {
 	int i = 0;
@@ -116,7 +130,13 @@ float** MakeMat(int n)
 	}
 	return res;
 }
- 
+/**
+   * @brief  將數據填入6*6和6*1矩陣
+   * @param	 要填入數據的6*6矩陣地址
+   * @param  要填入數據的6*1矩陣地址
+   * @param  數據資料6,3陣列
+   * @retval 無
+   */ 
 void Matrix_input(float** input1_6,float* input6_1,float input[6][3])
 {
 	int i;
@@ -156,7 +176,11 @@ float** Matrix_Multiply(float ** Matrix_left,float ** Matrix_right)
 	return Matrix_result;
 }
 
-
+/**
+  * @brief  將傳入的6*6矩陣轉置
+  * @param  要轉置的矩陣地址 
+  * @retval 轉置好的矩陣地址
+  */
 float** Matrix_Transpose(float** input)
 {
 	int i,j;
@@ -169,12 +193,22 @@ float** Matrix_Transpose(float** input)
 
 	return output;
 }
+/**
+  * @brief  製作一個6*1的矩陣
+  * @param  無 
+  * @retval 製作好的矩陣的地址
+  */
 float* Make6_1Matrix(void)
 {
 	float* res = (float*)malloc(sizeof(float) * 6);
 	return res;
 }
-
+/**
+  * @brief  將傳入的6*1矩陣相乘並回傳相成的矩陣
+  * @param  左矩陣地址 
+  * @param  6*1的右矩陣
+  * @retval 6*1的矩陣
+  */
 float* Matrix6_1_Multiply(float ** Matrix_left,float * Matrix_right)
 {
     int i,k;

@@ -37,3 +37,4 @@
 .\objects\main.o: C:\keil\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: .\Hardware\PWM.h
 .\objects\main.o: .\System\Timer.h
+.\objects\main.o: .\Hardware\LED.h

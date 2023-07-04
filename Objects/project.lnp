@@ -28,6 +28,7 @@
 ".\objects\main.o"
 ".\objects\stm32f10x_it.o"
 ".\objects\imu.o"
+".\objects\pid.o"
 ".\objects\delay.o"
 ".\objects\timer.o"
 ".\objects\button.o"
@@ -36,6 +37,7 @@
 ".\objects\serial.o"
 ".\objects\pwm.o"
 ".\objects\mpu9250.o"
+".\objects\led.o"
 ".\objects\matrix.o"
 --library_type=microlib --strict --scatter ".\Objects\project.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols

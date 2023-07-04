@@ -1,6 +1,7 @@
 #include "stm32f10x.h"                  // Device header
 #include <stdio.h>
 #include <stdarg.h>
+#include "Struct.h"
 uint8_t Serial_RxData;
 uint8_t Serial_RxFlag;
 
@@ -181,53 +182,56 @@ void Test_Send_User(uint16_t data1, uint16_t data2, uint16_t data3,uint16_t data
    * @param  acc,gyro,mag,pitch,yaw,roll
    * @retval 無
    */
-void Test_Send_User1(int16_t acc_x_,int16_t acc_y_,int16_t acc_z_,int16_t gyro_x_,int16_t gyro_y_,int16_t gyro_z_,int16_t mag_x_,int16_t mag_y_,int16_t mag_z_,int16_t roll_,int16_t pitch_,int16_t yaw_)
+void Test_Send_IMUData(IMU_Struct* IMU_Structure,Attitude_Struct* Attitude_Structure)
 {
-	 vu8 _cnt=0;
+	vu8 _cnt=0;
     vu8 sum=0;
     vu8 i=0;
+	uint16_t temp;
  
     testdatatosend[_cnt++]=0x88;
     testdatatosend[_cnt++]=0xAF;
     testdatatosend[_cnt++]=0x1C;
  
-    testdatatosend[_cnt++]=acc_x_>>8;     //
-    testdatatosend[_cnt++]=acc_x_&0xff;   //
+    testdatatosend[_cnt++]=(IMU_Structure->AccX)>>8;     //
+    testdatatosend[_cnt++]=(IMU_Structure->AccX)&0xff;   //
  
-    testdatatosend[_cnt++]=acc_y_>>8;
-    testdatatosend[_cnt++]=acc_y_&0xff;
+    testdatatosend[_cnt++]=(IMU_Structure->AccY)>>8;
+    testdatatosend[_cnt++]=(IMU_Structure->AccY)&0xff;
  
-    testdatatosend[_cnt++]=acc_z_>>8;
-    testdatatosend[_cnt++]=acc_z_&0xff;
+    testdatatosend[_cnt++]=(IMU_Structure->AccZ)>>8;
+    testdatatosend[_cnt++]=(IMU_Structure->AccZ)&0xff;
  
-    testdatatosend[_cnt++]=gyro_x_>>8;
-    testdatatosend[_cnt++]=gyro_x_&0xff;
+    testdatatosend[_cnt++]=(IMU_Structure->GyroX)>>8;
+    testdatatosend[_cnt++]=(IMU_Structure->GyroX)&0xff;
  
-    testdatatosend[_cnt++]=gyro_y_>>8;
-    testdatatosend[_cnt++]=gyro_y_&0xff;
+    testdatatosend[_cnt++]=(IMU_Structure->GyroY)>>8;
+    testdatatosend[_cnt++]=(IMU_Structure->GyroY)&0xff;
 
-    testdatatosend[_cnt++]=gyro_z_>>8;
-    testdatatosend[_cnt++]=gyro_z_&0xff;
+    testdatatosend[_cnt++]=(IMU_Structure->GyroZ)>>8;
+    testdatatosend[_cnt++]=(IMU_Structure->GyroZ)&0xff;
 	
-    testdatatosend[_cnt++]=mag_x_>>8;
-    testdatatosend[_cnt++]=mag_x_&0xff;
+    testdatatosend[_cnt++]=(IMU_Structure->MagX)>>8;
+    testdatatosend[_cnt++]=(IMU_Structure->MagX)&0xff;
 		
-    testdatatosend[_cnt++]=mag_y_>>8;
-    testdatatosend[_cnt++]=mag_y_&0xff;
+    testdatatosend[_cnt++]=(IMU_Structure->MagY)>>8;
+    testdatatosend[_cnt++]=(IMU_Structure->MagY)&0xff;
 		
-    testdatatosend[_cnt++]=mag_z_>>8;
-    testdatatosend[_cnt++]=mag_z_&0xff;
+    testdatatosend[_cnt++]=(IMU_Structure->MagZ)>>8;
+    testdatatosend[_cnt++]=(IMU_Structure->MagZ)&0xff;
 		
 
+	temp=(uint16_t)(Attitude_Structure->Roll*100);
+    testdatatosend[_cnt++]=temp>>8;
+    testdatatosend[_cnt++]=temp&0xff;
+	
+	temp=(uint16_t)(Attitude_Structure->Pitch*100);
+    testdatatosend[_cnt++]=temp>>8;
+    testdatatosend[_cnt++]=temp&0xff;
  
-    testdatatosend[_cnt++]=roll_>>8;
-    testdatatosend[_cnt++]=roll_&0xff;
- 
-    testdatatosend[_cnt++]=pitch_>>8;
-    testdatatosend[_cnt++]=pitch_&0xff;
- 
-    testdatatosend[_cnt++]=yaw_>>8;
-    testdatatosend[_cnt++]=yaw_&0xff;
+	temp=(uint16_t)(Attitude_Structure->Yaw*100);
+    testdatatosend[_cnt++]=temp>>8;
+    testdatatosend[_cnt++]=temp&0xff;
  
     testdatatosend[_cnt++]=0x00;
     testdatatosend[_cnt++]=0x00;

@@ -685,6 +685,16 @@
               <FileType>5</FileType>
               <FilePath>.\System\imu.h</FilePath>
             </File>
+            <File>
+              <FileName>PID.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\PID.c</FilePath>
+            </File>
+            <File>
+              <FileName>PID.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\PID.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -784,6 +794,16 @@
               <FileName>MPU9250_Reg.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\MPU9250_Reg.h</FilePath>
+            </File>
+            <File>
+              <FileName>LED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\LED.c</FilePath>
+            </File>
+            <File>
+              <FileName>LED.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\LED.h</FilePath>
             </File>
           </Files>
         </Group>
