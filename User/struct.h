@@ -61,7 +61,8 @@ typedef struct
 
 extern IMU_Struct IMU_Structure;
 extern Attitude_Struct Attitude_Structure;
-
+extern Calibrate_Struct Calibrate_Structure_Acc;
+extern XYZ_Struct Acc_result;
 #endif
 
 

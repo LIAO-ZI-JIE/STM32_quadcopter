@@ -6,8 +6,12 @@
 #include "Matrix.h"
 #include "Delay.h"
 #include "Struct.h"
+#include "LED.h"
+#include "oled.h"
 #define MPU9250_ADDRESS		0xD0
-uint8_t MPU9250_Calibrate_flag=0;
+XYZ_Struct Acc_result;
+uint8_t x_axis,y_axis,z_axis; 
+uint8_t MPU9250_Calibrate_flag=1;
 Calibrate_Struct Calibrate_Structure_Acc;
 void MPU9250_WaitEvent(I2C_TypeDef* I2Cx, uint32_t I2C_EVENT)
 {
@@ -154,9 +158,21 @@ void MPU9250_Init(void)
 	
   /**********************Init MAG **********************************/
 	AK8963_WriteReg(AK8963_CNTL2_REG,AK8963_CNTL2_SRST); // Reset AK8963
-	AK8963_WriteReg(AK8963_CNTL1_REG,0x12); // use i2c to set AK8963 working on Continuous measurement mode1 & 16-bit output	
-  
-	Delay_ms(10);
+	Delay_ms(50);
+	AK8963_WriteReg(AK8963_CNTL1_REG,0x0F);
+	Delay_ms(50);
+
+	x_axis=AK8963_ReadReg(AK8963_ASAX);// X???????
+	x_axis=((((float)x_axis-128)/256)+1);
+	y_axis=AK8963_ReadReg(AK8963_ASAY);
+	y_axis=((((float)y_axis-128)/256)+1);
+	z_axis=AK8963_ReadReg(AK8963_ASAZ);
+	z_axis=((((float)z_axis-128)/256)+1);
+	AK8963_WriteReg(AK8963_CNTL1_REG,0x00);
+	Delay_ms(50);
+	AK8963_WriteReg(AK8963_CNTL1_REG,0x16); // use i2c to set AK8963 working on Continuous measurement mode2 & 16-bit output	
+    Delay_ms(50);
+
 }
 
 //void MPU9250_Init(void)
@@ -214,7 +230,7 @@ uint8_t MPU9250_GetID(void)
 
 uint8_t AK8963_GetID(void)
 {
-	return AK8963_ReadReg(AK8963_WHOAMI_ID);
+	return AK8963_ReadReg(AK8963_WHOAMI_REG);
 }
 
 
@@ -276,13 +292,13 @@ void MPU9250_GetData_continuous(IMU_Struct *IMU_Structure)
 	IMU_Structure->AccY = ((I2C_ReceiveData(I2C2))<<8);	
 
 	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
-	IMU_Structure->AccY |= (I2C_ReceiveData(I2C2));	
+	IMU_Structure->AccY |=  I2C_ReceiveData(I2C2);	
 
 	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
 	IMU_Structure->AccZ = ((I2C_ReceiveData(I2C2))<<8);	
 
 	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
-	IMU_Structure->AccZ |= (I2C_ReceiveData(I2C2));	
+	IMU_Structure->AccZ |=  I2C_ReceiveData(I2C2);	
 	
 	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
 	IMU_Structure->Temp = ((I2C_ReceiveData(I2C2))<<8);	
@@ -315,59 +331,189 @@ void MPU9250_GetData_continuous(IMU_Struct *IMU_Structure)
 }
 
 
+//void READ_MPU9250_MAG(IMU_Struct *IMU_Structure)
+//{
+//	uint8_t Data[8];
+//	uint8_t c;
+//	I2C_GenerateSTART(I2C2, ENABLE);
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_MODE_SELECT);
+//	
+//	I2C_Send7bitAddress(I2C2, AK8963_ADDR, I2C_Direction_Transmitter);
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED);
+//	
+//	I2C_SendData(I2C2, MAG_XOUT_L);
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_TRANSMITTED);
+//	
+//	I2C_GenerateSTART(I2C2, ENABLE);
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_MODE_SELECT);
+//	
+//	I2C_Send7bitAddress(I2C2, AK8963_ADDR, I2C_Direction_Receiver);
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED);
+//	
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+//	Data[0] = I2C_ReceiveData(I2C2);	
 
-void READ_MPU9250_MAG(void)
-{ 	
-	uint16_t BUF[6];	
-	u8 x_axis,y_axis,z_axis; 
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+//	Data[1] = I2C_ReceiveData(I2C2);	
+//	
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+//	Data[2] = I2C_ReceiveData(I2C2);	
 
-	x_axis=AK8963_ReadReg(AK8963_ASAX);// X???????
-	y_axis=AK8963_ReadReg(AK8963_ASAY);
-	z_axis=AK8963_ReadReg(AK8963_ASAZ);
-	
-	if((AK8963_ReadReg(AK8963_ST1_REG)&AK8963_ST1_DOR)==0)//data ready
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+//	Data[3] = I2C_ReceiveData(I2C2);	
+
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+//	Data[4] = I2C_ReceiveData(I2C2);	
+
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+//	Data[5]=  I2C_ReceiveData(I2C2);	
+//	
+
+
+//	
+//	
+//		
+
+//	I2C_AcknowledgeConfig(I2C2, DISABLE);
+//	I2C_GenerateSTOP(I2C2, ENABLE);
+//	
+//	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+//	Data[6]=  I2C_ReceiveData(I2C2);
+//	
+//	I2C_AcknowledgeConfig(I2C2, ENABLE);
+//	c = Data[6];
+////	LED(1);
+//	if(!(c & 0x08)) 
+//	{ // Check if magnetic sensor overflow set, if not then report data
+//	LED(1);
+//	IMU_Structure->MagX = (((int16_t)Data[1] << 8) | Data[0])*(((x_axis-128)>>8)+1) ;  // Turn the MSB and LSB into a signed 16-bit value
+//	IMU_Structure->MagY = (((int16_t)Data[3] << 8) | Data[2])*(((y_axis-128)>>8)+1) ;  // Data stored as little Endian
+//	IMU_Structure->MagZ = (((int16_t)Data[5] << 8) | Data[4])*(((z_axis-128)>>8)+1) ; 
+//	OLED_ShowSignedNum(2, 1, Data[6], 5);
+//    OLED_ShowSignedNum(3, 1, (((int16_t)Data[3] << 8) | Data[2]), 5);
+//    OLED_ShowSignedNum(4, 1, ((Data[5]<<8)|Data[4]), 5);	
+//	}
+//}
+//void READ_MPU9250_MAG(IMU_Struct *IMU_Structure)
+//{ 	
+//	uint16_t BUF[6];	
+
+
+
+//	
+//	if((AK8963_ReadReg(AK8963_ST1_REG)&AK8963_ST1_DOR)==0)//data ready
+//	{
+//		
+//			//????X???
+//		 BUF[0]=AK8963_ReadReg(MAG_XOUT_L); //Low data	
+//		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register & check Magnetic sensor overflow occurred 
+//		 {
+//			 BUF[0]=AK8963_ReadReg(MAG_XOUT_L);//reload data
+//		 } 
+//		 BUF[1]=AK8963_ReadReg(MAG_XOUT_H); //High data	
+//		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
+//		 {
+//			 BUF[1]=AK8963_ReadReg(MAG_XOUT_H);
+//		 }
+//		 IMU_Structure->MagX=((BUF[1]<<8)|BUF[0])*(((x_axis-128)>>8)+1);		//????? ???/RM-MPU-9250A-00 PDF/ 5.13	
+//		 
+//		//????Y???
+//		BUF[2]=AK8963_ReadReg(MAG_YOUT_L); //Low data	
+//		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
+//		 {
+//			 BUF[2]=AK8963_ReadReg(MAG_YOUT_L);
+//		 }		 
+//		 BUF[3]=AK8963_ReadReg(MAG_YOUT_H); //High data	
+//		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
+//		 {
+//			 BUF[3]=AK8963_ReadReg(MAG_YOUT_H);
+//		 }
+//		 IMU_Structure->MagY=((BUF[3]<<8)|BUF[2])*(((y_axis-128)>>8)+1);	
+//		 
+//		//????Z???
+//		 BUF[4]=AK8963_ReadReg(MAG_ZOUT_L); //Low data	
+//		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
+//		 {
+//			 BUF[4]=AK8963_ReadReg(MAG_ZOUT_L);
+//		 }	 
+//		 BUF[5]=AK8963_ReadReg(MAG_ZOUT_H); //High data	
+//		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
+//		 {
+//			 BUF[5]=AK8963_ReadReg(MAG_ZOUT_H);
+//		 }
+//		 OLED_ShowHexNum(1, 8, BUF[3] ,5);
+//		 IMU_Structure->MagZ=((BUF[5]<<8)|BUF[4])*(((z_axis-128)>>8)+1);	
+//		 OLED_ShowSignedNum(2, 1, ((BUF[1]<<8)|BUF[0]), 5);
+//		 OLED_ShowSignedNum(3, 1, y_axis, 5);
+//		 OLED_ShowSignedNum(4, 1, ((BUF[5]<<8)|BUF[4]), 5);	
+//		 
+//	}
+//}
+
+void READ_MPU9250_MAG(IMU_Struct *IMU_Structure)
+{ 		
+
+	if(AK8963_ReadReg(AK8963_ST1_REG) & 0x01)//data ready
 	{
-			//????X???
-		 BUF[0]=AK8963_ReadReg(MAG_XOUT_L); //Low data	
-		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register & check Magnetic sensor overflow occurred 
-		 {
-			 BUF[0]=AK8963_ReadReg(MAG_XOUT_L);//reload data
-		 } 
-		 BUF[1]=AK8963_ReadReg(MAG_XOUT_H); //High data	
-		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
-		 {
-			 BUF[1]=AK8963_ReadReg(MAG_XOUT_H);
-		 }
-		 IMU_Structure.MagX=((BUF[1]<<8)|BUF[0])*(((x_axis-128)>>8)+1);		//????? ???/RM-MPU-9250A-00 PDF/ 5.13	
-		 
-		//????Y???
-			BUF[2]=AK8963_ReadReg(MAG_YOUT_L); //Low data	
-		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
-		 {
-			 BUF[2]=AK8963_ReadReg(MAG_YOUT_L);
-		 }		 
-		 BUF[3]=AK8963_ReadReg(MAG_YOUT_H); //High data	
-		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
-		 {
-			 BUF[3]=AK8963_ReadReg(MAG_YOUT_H);
-		 }
-		 IMU_Structure.MagY=((BUF[3]<<8)|BUF[2])*(((y_axis-128)>>8)+1);	
-		 
-		//????Z???
-		 BUF[4]=AK8963_ReadReg(MAG_ZOUT_L); //Low data	
-		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
-		 {
-			 BUF[4]=AK8963_ReadReg(MAG_ZOUT_L);
-		 }	 
-		 BUF[5]=AK8963_ReadReg(MAG_ZOUT_H); //High data	
-		 if((AK8963_ReadReg(AK8963_ST2_REG)&AK8963_ST2_HOFL)==1)// data reading end register
-		 {
-			 BUF[5]=AK8963_ReadReg(MAG_ZOUT_H);
-		 }
-		 IMU_Structure.MagZ=((BUF[5]<<8)|BUF[4])*(((z_axis-128)>>8)+1);	
-	}					       
-}
+		
+	uint8_t Data[8];
+	I2C_GenerateSTART(I2C2, ENABLE);
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_MODE_SELECT);
+	
+	I2C_Send7bitAddress(I2C2, AK8963_ADDR, I2C_Direction_Transmitter);
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED);
+	
+	I2C_SendData(I2C2, MAG_XOUT_L);
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_TRANSMITTED);
+	
+	I2C_GenerateSTART(I2C2, ENABLE);
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_MODE_SELECT);
+	
+	I2C_Send7bitAddress(I2C2, AK8963_ADDR, I2C_Direction_Receiver);
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED);
+	
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	Data[0] = I2C_ReceiveData(I2C2);	
 
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	Data[1] = I2C_ReceiveData(I2C2);	
+	
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	Data[2] = I2C_ReceiveData(I2C2);	
+
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	Data[3] = I2C_ReceiveData(I2C2);	
+
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	Data[4] = I2C_ReceiveData(I2C2);	
+
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	Data[5]=  I2C_ReceiveData(I2C2);	
+
+	I2C_AcknowledgeConfig(I2C2, DISABLE);
+	I2C_GenerateSTOP(I2C2, ENABLE);
+	
+	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	Data[6]=  I2C_ReceiveData(I2C2);
+//	OLED_ShowSignedNum(2, 1, Data[6], 5);
+//	Data[0]=AK8963_ReadReg(0x03);
+//	Data[1]=AK8963_ReadReg(0x04);
+//	Data[2]=AK8963_ReadReg(0x05);
+//	Data[3]=AK8963_ReadReg(0x06);
+//	Data[4]=AK8963_ReadReg(0x07);
+//	Data[5]=AK8963_ReadReg(0x08);
+//	Data[6]=AK8963_ReadReg(0x09);
+
+	if(!(Data[6] & 0x08)) 
+	{ // Check if magnetic sensor overflow set, if not then report data
+
+	IMU_Structure->MagX = (((int16_t)Data[1] << 8) | Data[0])*x_axis ;  // Turn the MSB and LSB into a signed 16-bit value
+	IMU_Structure->MagY = (((int16_t)Data[3] << 8) | Data[2])*y_axis ;  // Data stored as little Endian
+	IMU_Structure->MagZ = (((int16_t)Data[5] << 8) | Data[4])*z_axis ; 
+
+	}
+	}
+}
 
 void MPU9250_Calibrate_Calculate(Calibrate_Struct* Calibrate_Structure,float input[6][3])
 {
@@ -459,21 +605,32 @@ void MPU9250_Calibrate_PrepareData(void)
 {
 	static int time;
 	static int flag=0;
-	static float MPU9250_Gyro_Data[6][3];
-	
-	if(time>=10)
-	{		
+	static float MPU9250_Acc_Data[6][3]={	
+											{120.23,0,0.1},
+											{-80.32,0.123,-0.1},
+											{0.1,100.43,-0.2},
+											{0.11,-100.43,-0.1253},
+											{0.11,0.114,100.54},
+											{0.2,-0.07,-100.34}
+										};
+	time++;
+	if(time>=50)
+	{
+//		LED(1);
 		if(flag==6)
 		{
-			MPU9250_Calibrate_Calculate(&Calibrate_Structure_Acc,MPU9250_Gyro_Data);
+			
+			MPU9250_Calibrate_Calculate(&Calibrate_Structure_Acc,MPU9250_Acc_Data);
 			MPU9250_Calibrate_flag=0;
 			flag=0;
 		}
-		MPU9250_Gyro_Data[flag][0]=IMU_Structure.GyroX;
-		MPU9250_Gyro_Data[flag][1]=IMU_Structure.GyroY;
-		MPU9250_Gyro_Data[flag][2]=IMU_Structure.GyroZ;
+		MPU9250_Acc_Data[flag][0]=IMU_Structure.AccX;
+		MPU9250_Acc_Data[flag][1]=IMU_Structure.AccY;
+		MPU9250_Acc_Data[flag][2]=IMU_Structure.AccZ;
+//		LED(0);
+		OLED_ShowSignedNum(1, 1, flag, 4);
 		flag++;
-
+		time=0;
 	}
 }
 
@@ -484,10 +641,8 @@ void MPU9250_Calibrate(void)
 		MPU9250_Calibrate_PrepareData();
 		return;
 	}
-	IMU_Structure.AccX=IMU_Structure.AccX/Calibrate_Structure_Acc.Rx+Calibrate_Structure_Acc.Ox;
-	IMU_Structure.AccY=IMU_Structure.AccY/Calibrate_Structure_Acc.Ry+Calibrate_Structure_Acc.Oy;
-	IMU_Structure.AccZ=IMU_Structure.AccZ/Calibrate_Structure_Acc.Rz+Calibrate_Structure_Acc.Oz;
+	Acc_result.X=(float)((IMU_Structure.AccX+Calibrate_Structure_Acc.Ox)/Calibrate_Structure_Acc.Rx);
+	Acc_result.Y=(float)((IMU_Structure.AccY+Calibrate_Structure_Acc.Oy)/Calibrate_Structure_Acc.Ry);
+	Acc_result.Z=(float)((IMU_Structure.AccZ+Calibrate_Structure_Acc.Oz)/Calibrate_Structure_Acc.Rz);
 	
-
-
 }

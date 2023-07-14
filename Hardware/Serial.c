@@ -23,7 +23,7 @@ void Serial_Init(void)
 	
 	
 	USART_InitTypeDef USART_InitStructure;
-	USART_InitStructure.USART_BaudRate=115200;//鮑率
+	USART_InitStructure.USART_BaudRate=500000;//鮑率
 	USART_InitStructure.USART_HardwareFlowControl=USART_HardwareFlowControl_None;//流控
 	USART_InitStructure.USART_Mode=USART_Mode_Tx|USART_Mode_Rx ;//收發模式
 	USART_InitStructure.USART_Parity=USART_Parity_No;//較驗位

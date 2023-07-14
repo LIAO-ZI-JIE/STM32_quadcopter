@@ -34,3 +34,5 @@
 .\objects\mpu9250.o: .\User\Struct.h
 .\objects\mpu9250.o: .\Math\Matrix.h
 .\objects\mpu9250.o: .\System\Delay.h
+.\objects\mpu9250.o: Hardware\LED.h
+.\objects\mpu9250.o: Hardware\oled.h

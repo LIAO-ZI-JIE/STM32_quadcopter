@@ -12,7 +12,8 @@ void MPU9250_GetData(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
 void MPU9250_GetData_continuous(IMU_Struct *IMU_Structure);
 void i2c_Mag_write(u8 reg,u8 value);
 void AK8963_WriteReg(uint8_t RegAddress, uint8_t Data);
-
+void READ_MPU9250_MAG(IMU_Struct *IMU_Structure);
+uint8_t AK8963_ReadReg(uint8_t RegAddress);
 void MPU9250_Calibrate(void);
 
 #endif

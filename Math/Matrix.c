@@ -1,6 +1,9 @@
+#include "stm32f10x.h"                  // Device header
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include "LED.h"
+#include "oled.h"
 /**
   * @brief  將矩陣釋放
   * @param  需釋放的矩陣地址
@@ -121,7 +124,6 @@ float** Matrix_inverse(float** src)
 float** MakeMat(int n)
 {
 	int i = 0;
-
 	float** res = (float**)malloc(sizeof(float*) * n);
 
 	for (i = 0; i < n; i++)
@@ -139,18 +141,20 @@ float** MakeMat(int n)
    */ 
 void Matrix_input(float** input1_6,float* input6_1,float input[6][3])
 {
-	int i;
-	for(i=0;i<7;i++)
+	uint8_t i;
+	for(i=0;i<6;i++)
 	{
-		input1_6[i][0]=input[i][1]*input[i][1];
-		input1_6[i][1]=input[i][2]*input[i][2];
-		input1_6[i][2]=input[i][0];
-		input1_6[i][3]=input[i][1];
-		input1_6[i][4]=input[i][2];
+		
+		input1_6[i][0]=(input[i][1])*(input[i][1]);
+		input1_6[i][1]=(input[i][2])*(input[i][2]);
+		input1_6[i][2]=(input[i][0]);
+		input1_6[i][3]=(input[i][1]);
+		input1_6[i][4]=(input[i][2]);
 		input1_6[i][5]=1;
-		input6_1[i]=-input[i][0]*input[i][0];	
+		input6_1[i]=-(input[i][0])*(input[i][0]);	
 	
 	}	
+
 }
  /**
   * @brief  將矩陣相乘

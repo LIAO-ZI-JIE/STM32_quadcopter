@@ -29,6 +29,7 @@
 .\objects\main.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\main.o: .\Libaray\misc.h
 .\objects\main.o: .\Hardware\OLED.h
+.\objects\main.o: .\System\Delay.h
 .\objects\main.o: .\Hardware\IC.h
 .\objects\main.o: User\Struct.h
 .\objects\main.o: .\Hardware\MPU9250.h
