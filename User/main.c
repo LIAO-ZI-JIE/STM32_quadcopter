@@ -32,8 +32,9 @@ int main(void)
 		
 
 		
-//		ID=MPU9250_GetID();
-		Test_Send_IMUData(&IMU_Structure,&Attitude_Structure);
+		ID=AK8963_GetID();
+//		printf("Ox:%f Oy:%f Oz:%f Rx:%f Ry:%f Rz:%f   \n",Calibrate_Structure_Acc.Ox,Calibrate_Structure_Acc.Oy,Calibrate_Structure_Acc.Oz,Calibrate_Structure_Acc.Rx,Calibrate_Structure_Acc.Ry,Calibrate_Structure_Acc.Rz);
+
 		TIM_SetCompare1(TIM2,(TIM_GetCapture2(TIM1)+1));
 		TIM_SetCompare2(TIM2,(TIM_GetCapture3(TIM1)+1)-(TIM_GetCapture4(TIM1)+1));
 		TIM_SetCompare3(TIM2,(TIM_GetCapture2(TIM4)+1));
@@ -41,14 +42,17 @@ int main(void)
 		if(imu_Flag==1)
 		{
 			MPU9250_GetData_continuous(&IMU_Structure);
-			Delay_us(100);
+			Delay_us(10);
 			READ_MPU9250_MAG(&IMU_Structure);
+			printf("%d      %d      %d  \r\n",IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ);
 			MPU9250_Calibrate();
 			imu_Flag=0;
 		}
 		if(serial_flag==1)
 		{
-			Test_Send_User(IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,1);
+//		    Test_Send_IMUData(&IMU_Structure,&Attitude_Structure);
+
+//			Test_Send_User(IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,1);
 			serial_flag=0;
 		}
 		
@@ -97,7 +101,7 @@ void TIM3_IRQHandler(void)
 	{
 		imu_time++;
 		serial_time++;
-		if(imu_time>=20)
+		if(imu_time>=2)
 		{
 			imu_Flag=1;
 

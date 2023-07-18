@@ -36,3 +36,5 @@
 .\objects\mpu9250.o: .\System\Delay.h
 .\objects\mpu9250.o: Hardware\LED.h
 .\objects\mpu9250.o: Hardware\oled.h
+.\objects\mpu9250.o: Hardware\Serial.h
+.\objects\mpu9250.o: C:\keil\ARM\ARMCC\Bin\..\include\stdio.h
