@@ -10,10 +10,22 @@
 #include "oled.h"
 #include "Serial.h"
 #define MPU9250_ADDRESS		0xD0
+#define Acc_Conversion  0.00119651659346  //1/8196*9.80665
+#define Gyro_Conversion 0.001065264436032 //3.141592653589793/180*0.06103515625
+Result_Struct Result_Structure;
 XYZ_Struct Acc_result;
 XYZ_Struct Mag_result;
+Offset_Struct Offset_Structure={
+	11,
+	10,
+	-642,
+	160,
+	-165,
+	-7
+};
 uint8_t x_axis,y_axis,z_axis; 
-uint8_t MPU9250_Mag_Calibrate_flag=1;
+uint8_t MPU9250_Mag_Calibrate_flag=0;
+uint8_t MPU9250_Acc_Gryo_Calibrate_flag=0;
 Calibrate_Struct Calibrate_Structure_Mag={
 	155.460098,
 	142.641998,
@@ -385,7 +397,7 @@ void MPU9250_Calibrate_Calculate(Calibrate_Struct* Calibrate_Structure,float inp
 	
 }
 
-void MPU9250_Calibrate_PrepareData_Mag(void)
+void MPU9250_Mag_Calibrate_PrepareData(void)
 {
 	static int8_t time;
 	static int8_t flag=0;
@@ -419,20 +431,61 @@ void MPU9250_Calibrate_PrepareData_Mag(void)
 		time=0;
 	}
 }
+uint8_t MPU9250_Offset_Calibrate(int16_t Sensivity)
+{
+	static int32_t tempGx=0,tempGy=0,tempGz=0,tempAx=0,tempAy=0,tempAz=0; 
+	static uint16_t cnt=0;
+	cnt++;
+	tempAx+=IMU_Structure.AccX;
+	tempAy+=IMU_Structure.AccY;
+	tempAz+=IMU_Structure.AccZ-Sensivity;
+	tempGx+=IMU_Structure.GyroX;
+	tempGy+=IMU_Structure.GyroY;
+	tempGz+=IMU_Structure.GyroZ;
+	if(cnt==200)      
+	{
+		Offset_Structure.Acc_Offset_X=tempAx/cnt;
+		Offset_Structure.Acc_Offset_Y=tempAy/cnt;
+		Offset_Structure.Acc_Offset_Z=tempAz/cnt;
+		Offset_Structure.Gyro_Offset_X=tempGx/cnt;
+		Offset_Structure.Gyro_Offset_Y=tempGy/cnt;
+		Offset_Structure.Gyro_Offset_Z=tempGz/cnt;
+		cnt = 0;
+		tempAx=0;
+		tempAy=0;
+		tempAz=0;
+		tempGx=0;
+		tempGy=0;
+		tempGz=0;
+		return 1;
+	}
+	return 0;
+}
 void MPU9250_Calibrate(void)
 {
 	if(MPU9250_Mag_Calibrate_flag==1)
 	{
-		MPU9250_Calibrate_PrepareData_Mag();
-		
+		MPU9250_Mag_Calibrate_PrepareData();
 		return;
 	}
-
-	Mag_result.X=(float)((IMU_Structure.MagX+Calibrate_Structure_Mag.Ox)/Calibrate_Structure_Mag.Rx);
-	Mag_result.Y=(float)((IMU_Structure.MagY+Calibrate_Structure_Mag.Oy)/Calibrate_Structure_Mag.Ry);
-	Mag_result.Z=(float)((IMU_Structure.MagZ+Calibrate_Structure_Mag.Oz)/Calibrate_Structure_Mag.Rz);
-	Acc_result.X=(float)IMU_Structure.AccX/4096;
-	Acc_result.Y=(float)IMU_Structure.AccY/4096;
-	Acc_result.Z=(float)IMU_Structure.AccZ/4096;
+	if(MPU9250_Acc_Gryo_Calibrate_flag==1)
+	{
+		if(MPU9250_Offset_Calibrate(8196))
+		{
+			MPU9250_Acc_Gryo_Calibrate_flag=0;
+		}
+		return;
+	}		
+//	printf("AX:%d  AY:%d AZ:%d GX:%d  GY:%d GZ:%d\r\n",Offset_Structure.Acc_Offset_X,Offset_Structure.Acc_Offset_Y,Offset_Structure.Acc_Offset_Z,Offset_Structure.Gyro_Offset_X,Offset_Structure.Gyro_Offset_Y,Offset_Structure.Gyro_Offset_Z);
+	Result_Structure.Mag.X=(float)((IMU_Structure.MagX+Calibrate_Structure_Mag.Ox)/Calibrate_Structure_Mag.Rx);
+	Result_Structure.Mag.Y=(float)((IMU_Structure.MagY+Calibrate_Structure_Mag.Oy)/Calibrate_Structure_Mag.Ry);
+	Result_Structure.Mag.Z=(float)((IMU_Structure.MagZ+Calibrate_Structure_Mag.Oz)/Calibrate_Structure_Mag.Rz);
+	Result_Structure.Acc.X=(float)(IMU_Structure.AccX-Offset_Structure.Acc_Offset_X)*Acc_Conversion;
+	Result_Structure.Acc.Y=(float)(IMU_Structure.AccY-Offset_Structure.Acc_Offset_Y)*Acc_Conversion;
+	Result_Structure.Acc.Z=(float)(IMU_Structure.AccZ-Offset_Structure.Acc_Offset_Z)*Acc_Conversion;
+	Result_Structure.Gyro.X=(float)(IMU_Structure.GyroX-Offset_Structure.Gyro_Offset_X)*Gyro_Conversion;
+	Result_Structure.Gyro.Y=(float)(IMU_Structure.GyroY-Offset_Structure.Gyro_Offset_Y)*Gyro_Conversion;
+	Result_Structure.Gyro.Z=(float)(IMU_Structure.GyroZ-Offset_Structure.Gyro_Offset_Z)*Gyro_Conversion;
 //	printf("X:%f  Y:%f Z:%f \r\n",Mag_result.X,Mag_result.Y,Mag_result.Z);
+	printf("Ax:%f  Ay:%f  Az:%f  Gx:%f  Gy:%f   Gz:%f  Mx:%f  My:%f  Mz:%f \r\n",Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
 }

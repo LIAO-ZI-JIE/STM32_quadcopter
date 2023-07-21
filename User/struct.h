@@ -13,7 +13,12 @@ typedef struct
 	int16_t MagY;
 	int16_t MagZ;
 }IMU_Struct;
-
+typedef struct
+{
+	int16_t X;
+	int16_t Y;
+	int16_t Z;
+}int16_Struct;
 
 
 typedef struct
@@ -59,6 +64,22 @@ typedef struct
 	float Z;
 }XYZ_Struct;
 
+typedef struct
+{	
+	int16_t Acc_Offset_X;
+	int16_t Acc_Offset_Y;
+	int16_t Acc_Offset_Z;
+	int16_t Gyro_Offset_X;
+	int16_t Gyro_Offset_Y;
+	int16_t Gyro_Offset_Z;
+
+}Offset_Struct;
+typedef struct
+{
+	XYZ_Struct Acc;
+	XYZ_Struct Gyro;
+	XYZ_Struct Mag;
+}Result_Struct;
 extern IMU_Struct IMU_Structure;
 extern Attitude_Struct Attitude_Structure;
 extern Calibrate_Struct Calibrate_Structure_Acc;

@@ -40,11 +40,12 @@ int main(void)
 		TIM_SetCompare3(TIM2,(TIM_GetCapture2(TIM4)+1));
 		TIM_SetCompare4(TIM2,(TIM_GetCapture4(TIM4)+1)-(TIM_GetCapture3(TIM4)+1));
 		if(imu_Flag==1)
-		{
+		{	
+			
 			MPU9250_GetData_continuous(&IMU_Structure);
 			Delay_us(10);
 			READ_MPU9250_MAG(&IMU_Structure);
-			printf("%d      %d      %d  \r\n",IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ);
+//			printf("%d      %d      %d  \r\n",IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ);
 			MPU9250_Calibrate();
 			imu_Flag=0;
 		}
