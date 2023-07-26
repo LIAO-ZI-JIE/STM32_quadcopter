@@ -51,11 +51,16 @@ int main(void)
 		}
 		if(serial_flag==1)
 		{
+			ANO_DT_Data_Exchange();
 //		    Test_Send_IMUData(&IMU_Structure,&Attitude_Structure);
 
 //			Test_Send_User(IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,1);
 			serial_flag=0;
 		}
+//		ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
+//						   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
+//						   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
+//						   0);
 		
 //		ID=MPU9250_GetID();
 //		READ_MPU9250_MAG();
@@ -102,13 +107,13 @@ void TIM3_IRQHandler(void)
 	{
 		imu_time++;
 		serial_time++;
-		if(imu_time>=2)
+		if(imu_time>=20)
 		{
 			imu_Flag=1;
 
 			imu_time=0;
 		}
-		if(serial_time>=50)
+		if(serial_time>=1)
 		{
 
 			serial_flag=1;

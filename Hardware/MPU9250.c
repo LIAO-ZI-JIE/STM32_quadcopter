@@ -487,5 +487,5 @@ void MPU9250_Calibrate(void)
 	Result_Structure.Gyro.Y=(float)(IMU_Structure.GyroY-Offset_Structure.Gyro_Offset_Y)*Gyro_Conversion;
 	Result_Structure.Gyro.Z=(float)(IMU_Structure.GyroZ-Offset_Structure.Gyro_Offset_Z)*Gyro_Conversion;
 //	printf("X:%f  Y:%f Z:%f \r\n",Mag_result.X,Mag_result.Y,Mag_result.Z);
-	printf("Ax:%f  Ay:%f  Az:%f  Gx:%f  Gy:%f   Gz:%f  Mx:%f  My:%f  Mz:%f \r\n",Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
+//	printf("Ax:%f  Ay:%f  Az:%f  Gx:%f  Gy:%f   Gz:%f  Mx:%f  My:%f  Mz:%f \r\n",Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
 }

@@ -31,3 +31,5 @@
 .\objects\serial.o: C:\keil\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\serial.o: C:\keil\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\serial.o: .\User\Struct.h
+.\objects\serial.o: Hardware\Serial.h
+.\objects\serial.o: Hardware\LED.h

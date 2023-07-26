@@ -10,9 +10,18 @@ void Serial_SendString(char *String);
 void Serial_Printf(char *format, ...);
 uint8_t Serial_GetRxFlag(void);
 uint8_t Serial_GetRxData(void);
-void Test_Send_IMUData(IMU_Struct* IMU_Structure,Attitude_Struct* Attitude_Structure);
-void Test_Send_User(uint16_t data1, uint16_t data2, uint16_t data3,uint16_t data4,uint16_t data5,uint16_t data6,uint16_t data7,uint16_t data8,uint16_t data9,uint16_t data10);
-void Test_Send_User2(uint16_t throt,uint16_t yaw_2,uint16_t roll_2,uint16_t pitch_2,uint16_t aux_1,uint16_t aux_2,uint16_t aux_3,uint16_t aux_4,uint16_t aux_5,uint16_t pwm1,uint16_t pwm2,uint16_t pwm3,uint16_t pwm4,uint16_t votage);
-void Test_Send_User3(int16_t acc_x_3,int16_t acc_y_3,int16_t acc_z_3,int16_t gyro_x_3,int16_t gyro_y_3,int16_t gyro_z_3);
-void Test_Send_User4(uint16_t rol_p,uint16_t rol_i,uint16_t rol_d,uint16_t pit_p,uint16_t pit_i,uint16_t pit_d,uint16_t yaw_p,uint16_t yaw_i,uint16_t yaw_d);
+void ANO_DT_Data_Exchange(void);
+void ANO_DT_Send_Data(uint8_t *dataToSend , uint8_t length);
+void ANO_DT_Data_Receive_Prepare(uint8_t data);
+void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num);
+void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, s32 alt, uint8_t fly_model, uint8_t armed);
+void ANO_DT_Send_Senser(s16 a_x,s16 a_y,s16 a_z,s16 g_x,s16 g_y,s16 g_z,s16 m_x,s16 m_y,s16 m_z,s32 bar);
+void ANO_DT_Send_RCData(u16 thr,u16 yaw,u16 rol,u16 pit,u16 aux1,u16 aux2,u16 aux3,u16 aux4,u16 aux5,u16 aux6);
+void ANO_DT_Send_Power(u16 votage, u16 current);
+void ANO_DT_Send_MotoPWM(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,u16 m_7,u16 m_8);
+void ANO_DT_Send_PID(uint8_t group,float p1_p,float p1_i,float p1_d,float p2_p,float p2_i,float p2_d,float p3_p,float p3_i,float p3_d);
+
+//自定义帧
+void Data_Send_AngleRate(float data1,float data2,float data3,float data4,float data5,float data6,float data7,float data8); //角速度调试环
+//void Data_Send_Filter(void);    //滤波调试
 #endif
