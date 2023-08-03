@@ -28,6 +28,7 @@
 .\objects\main.o: .\Libaray\stm32f10x_usart.h
 .\objects\main.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\main.o: .\Libaray\misc.h
+.\objects\main.o: C:\keil\ARM\ARMCC\Bin\..\include\Math.h
 .\objects\main.o: .\Hardware\OLED.h
 .\objects\main.o: .\System\Delay.h
 .\objects\main.o: .\Hardware\IC.h
@@ -39,3 +40,5 @@
 .\objects\main.o: .\Hardware\PWM.h
 .\objects\main.o: .\System\Timer.h
 .\objects\main.o: .\Hardware\LED.h
+.\objects\main.o: User\MahonyAHRS.h
+.\objects\main.o: User\PID.h

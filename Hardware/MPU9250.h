@@ -15,5 +15,7 @@ void AK8963_WriteReg(uint8_t RegAddress, uint8_t Data);
 void READ_MPU9250_MAG(IMU_Struct *IMU_Structure);
 uint8_t AK8963_ReadReg(uint8_t RegAddress);
 void MPU9250_Calibrate(void);
+extern uint8_t MPU9250_Acc_Gryo_Calibrate_flag;
+extern uint8_t MPU9250_Mag_Calibrate_flag;
 
 #endif

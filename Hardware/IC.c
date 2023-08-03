@@ -1,4 +1,6 @@
 #include "stm32f10x.h"                  // Device header
+#include "Struct.h"
+Remote_Control_Struct Remote_Control_Structure;
 void IC_Init(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1,ENABLE);
@@ -82,16 +84,11 @@ void IC_Init(void)
 	TIM_Cmd(TIM1,ENABLE);
 	TIM_Cmd(TIM4,ENABLE);	
 }
-uint16_t IC_GetFreq(void)
-{
-	return 1000000/(TIM_GetCapture1(TIM1)+1);
-}
-//uint16_t IC_GetTime(void)
-//{
-//	return (TIM_GetCapture2(TIM1)+1);
-//}
-uint16_t IC_GetDuty(void)
-{
-	return (float)(TIM_GetCapture2(TIM1)+1)/(TIM_GetCapture1(TIM1)+1)*100;
-}
-	
+
+void Get_Remote_Control(void)
+{	
+	Remote_Control_Structure.THROTTLE=(TIM_GetCapture2(TIM1)+1);
+	Remote_Control_Structure.YAW=(TIM_GetCapture3(TIM1)+1)-(TIM_GetCapture4(TIM1)+1);
+	Remote_Control_Structure.PITCH=(TIM_GetCapture2(TIM4)+1);
+	Remote_Control_Structure.ROLL=(TIM_GetCapture4(TIM4)+1)-(TIM_GetCapture3(TIM4)+1);
+}	

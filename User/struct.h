@@ -13,6 +13,7 @@ typedef struct
 	int16_t MagY;
 	int16_t MagZ;
 }IMU_Struct;
+
 typedef struct
 {
 	int16_t X;
@@ -74,16 +75,49 @@ typedef struct
 	int16_t Gyro_Offset_Z;
 
 }Offset_Struct;
+
 typedef struct
 {
 	XYZ_Struct Acc;
 	XYZ_Struct Gyro;
 	XYZ_Struct Mag;
 }Result_Struct;
+
+typedef struct
+{	
+	int16_t THROTTLE;
+	int16_t YAW;
+	int16_t ROLL;
+	int16_t PITCH;
+}Remote_Control_Struct;
+
+typedef struct
+{	
+	uint16_t Motor1;
+	uint16_t Motor2;
+	uint16_t Motor3;
+	uint16_t Motor4;
+}Motor_Struct;
+typedef struct
+{
+   	float kp,ki,kd;//三个系数
+    float error,lastError;//误差、上次误差
+    float integral,maxIntegral;//积分、积分限幅
+    float output,maxOutput;//输出、输出限幅
+}PID_Struct;
+//串级PID的结构体，包含两个单级PID
+typedef struct
+{
+    PID_Struct inner;//内环
+    PID_Struct outer;//外环
+    float output;//串级输出，等于inner.output
+}CascadePID_Struct;
 extern IMU_Struct IMU_Structure;
 extern Attitude_Struct Attitude_Structure;
-extern Calibrate_Struct Calibrate_Structure_Acc;
-extern XYZ_Struct Acc_result;
+extern Remote_Control_Struct Remote_Control_Structure;
+extern Motor_Struct Motor_Structure;
+extern Result_Struct Result_Structure;
+
 #endif
 
 

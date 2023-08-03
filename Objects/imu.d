@@ -1,4 +1,4 @@
-.\objects\imu.o: System\imu.c
+.\objects\imu.o: User\imu.c
 .\objects\imu.o: .\Start\stm32f10x.h
 .\objects\imu.o: .\Start\core_cm3.h
 .\objects\imu.o: C:\keil\ARM\ARMCC\Bin\..\include\stdint.h
@@ -29,5 +29,5 @@
 .\objects\imu.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\imu.o: .\Libaray\misc.h
 .\objects\imu.o: C:\keil\ARM\ARMCC\Bin\..\include\math.h
-.\objects\imu.o: .\User\Struct.h
+.\objects\imu.o: User\Struct.h
 .\objects\imu.o: .\Hardware\mpu9250.h

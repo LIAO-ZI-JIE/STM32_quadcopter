@@ -28,3 +28,4 @@
 .\objects\pwm.o: .\Libaray\stm32f10x_usart.h
 .\objects\pwm.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\pwm.o: .\Libaray\misc.h
+.\objects\pwm.o: .\User\Struct.h

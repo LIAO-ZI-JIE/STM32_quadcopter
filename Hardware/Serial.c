@@ -14,6 +14,8 @@
 #include "Struct.h"
 #include "Serial.h"
 #include "LED.h"
+#include "MPU9250.h"
+
 uint8_t Serial_RxData;
 uint8_t Serial_RxFlag;
 
@@ -196,7 +198,7 @@ void ANO_DT_Data_Exchange(void)
 	if(f.send_status)
 	{
 		f.send_status = 0;
-//		ANO_DT_Send_Status(Att_Angle.rol,Att_Angle.pit,Att_Angle.yaw,0,0,Airplane_Enable);
+		ANO_DT_Send_Status(Attitude_Structure.Roll,Attitude_Structure.Pitch,Attitude_Structure.Yaw,0,0,1);
 	}	
 //////////////////////////////////////// 发送传感器信息 //////////////////////////////////////////
 	else if(f.send_senser)
@@ -206,7 +208,7 @@ void ANO_DT_Data_Exchange(void)
 						   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
 						   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
 						   0);
-
+		Data_Send_AngleRate(Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
 		#if defined (ROL_PID_DEBUG)   //ROLL角调试
 			Data_Send_AngleRate(Gyr_rad.X*RadtoDeg,PID_ROL_Rate.Pout,PID_ROL_Rate.Iout,PID_ROL_Rate.Dout,
 		                       PID_ROL_Angle.Error,PID_ROL_Angle.Pout,PID_ROL_Angle.Iout,PID_ROL_Angle.Dout);
@@ -227,7 +229,7 @@ void ANO_DT_Data_Exchange(void)
 	else if(f.send_rcdata)
 	{
 		f.send_rcdata = 0;
-	//	ANO_DT_Send_RCData(RC_Control.THROTTLE,RC_Control.YAW,RC_Control.ROLL,RC_Control.PITCH,0,0,0,0,0,0);
+//		ANO_DT_Send_RCData(Remote_Control_Structure.THROTTLE,Remote_Control_Structure.YAW,Remote_Control_Structure.ROLL,Remote_Control_Structure.PITCH,0,0,0,0,0,0);
 	}	
 /////////////////////////////////////////////////////////////////////////////////////	
 	else if(f.send_motopwm)
@@ -372,6 +374,7 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
 	{
 		if(*(data_buf+4)==0X01)
 		{
+
 //			SENSER_FLAG_SET(ACC_OFFSET);//加速度校准
 //			ACC_OFFSET_RAW.X = 0;ACC_OFFSET_RAW.Y = 0;ACC_OFFSET_RAW.Z = 0;
 		}
@@ -382,6 +385,7 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
 		}
 		if(*(data_buf+4)==0X03)
 		{
+			MPU9250_Acc_Gryo_Calibrate_flag=1;
 //			SENSER_FLAG_SET(ACC_OFFSET);//加速度校准
 //			SENSER_FLAG_SET(GYRO_OFFSET);//陀螺仪校准
 		}

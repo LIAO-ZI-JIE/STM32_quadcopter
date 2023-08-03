@@ -1,4 +1,5 @@
-#include "stm32f10x.h"                  // Device header
+#include "stm32f10x.h"                  // Device head
+#include <Math.h>
 #include "OLED.h"
 #include "Delay.h"
 #include "IC.h"
@@ -9,13 +10,15 @@
 #include "PWM.h"
 #include "Timer.h"
 #include "LED.h"
-
+#include "MahonyAHRS.h"
+#include "PID.h"
 
 uint8_t ID;
 uint8_t imu_Flag,serial_flag;
 int16_t AX, AY, AZ, GX, GY, GZ;
-IMU_Struct IMU_Structure;
-Attitude_Struct Attitude_Structure;
+float a12,a22,a31,a32,a33;
+PID_Struct PID_Structure;
+
 
 int main(void)
 {
@@ -26,37 +29,50 @@ int main(void)
 	Serial_Init();
 	Timer_Init();
 	LED_Init();
-	
+	PID_Init(&PID_Structure,10,1,5,800,1000);//初始化PID参数
 	while(1)
 	{
 		
 
 		
 		ID=AK8963_GetID();
-//		printf("Ox:%f Oy:%f Oz:%f Rx:%f Ry:%f Rz:%f   \n",Calibrate_Structure_Acc.Ox,Calibrate_Structure_Acc.Oy,Calibrate_Structure_Acc.Oz,Calibrate_Structure_Acc.Rx,Calibrate_Structure_Acc.Ry,Calibrate_Structure_Acc.Rz);
-
-		TIM_SetCompare1(TIM2,(TIM_GetCapture2(TIM1)+1));
-		TIM_SetCompare2(TIM2,(TIM_GetCapture3(TIM1)+1)-(TIM_GetCapture4(TIM1)+1));
-		TIM_SetCompare3(TIM2,(TIM_GetCapture2(TIM4)+1));
-		TIM_SetCompare4(TIM2,(TIM_GetCapture4(TIM4)+1)-(TIM_GetCapture3(TIM4)+1));
 		if(imu_Flag==1)
 		{	
 			
 			MPU9250_GetData_continuous(&IMU_Structure);
 			Delay_us(10);
 			READ_MPU9250_MAG(&IMU_Structure);
-//			printf("%d      %d      %d  \r\n",IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ);
 			MPU9250_Calibrate();
+			Get_Remote_Control();
+			
+			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
+			a12 =   2.0f * (q1 * q2 + q0 * q3);
+			a22 =   q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3;
+			a31 =   2.0f * (q0 * q1 + q2 * q3);
+			a32 =   2.0f * (q1 * q3 - q0 * q2);
+			a33 =   q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3;
+			Attitude_Structure.Pitch = asinf(a32)*57.29577;
+			Attitude_Structure.Roll  = atan2f(a31, a33)*57.29577;
+			Attitude_Structure.Yaw   = -atan2f(a12, a22)*57.29577;
+			
+	//		Motor_Structure.Motor1=1000;
+	//		Motor_Structure.Motor2=1000;
+	//		Motor_Structure.Motor3=1000;
+	//		Motor_Structure.Motor4=1000;
+	//		Motor_Output();
 			imu_Flag=0;
 		}
 		if(serial_flag==1)
 		{
 			ANO_DT_Data_Exchange();
-//		    Test_Send_IMUData(&IMU_Structure,&Attitude_Structure);
-
-//			Test_Send_User(IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,1);
+			
 			serial_flag=0;
 		}
+//		Motor_Structure.Motor1=1000;
+//		Motor_Structure.Motor2=1000;
+//		Motor_Structure.Motor3=1000;
+//		Motor_Structure.Motor4=1000;
+//		Motor_Output();
 //		ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
 //						   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
 //						   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
@@ -70,31 +86,28 @@ int main(void)
 		
 //		OLED_ShowHexNum(1, 1, ID,2);
 				
-		OLED_ShowSignedNum(2, 1,IMU_Structure.GyroX ,5);
-		OLED_ShowSignedNum(3, 1, IMU_Structure.GyroY, 5);
-		OLED_ShowSignedNum(4, 1, IMU_Structure.GyroZ, 5);	
-		OLED_ShowSignedNum(2, 8, IMU_Structure.AccX, 5);
-		OLED_ShowSignedNum(3, 8, IMU_Structure.AccY, 5);
-		OLED_ShowSignedNum(4, 8, IMU_Structure.AccZ, 5);
+//		OLED_ShowSignedNum(2, 1, IMU_Structure.GyroX ,5);
+//		OLED_ShowSignedNum(3, 1, IMU_Structure.GyroY, 5);
+//		OLED_ShowSignedNum(4, 1, IMU_Structure.GyroZ, 5);	
+//		OLED_ShowSignedNum(2, 8, IMU_Structure.AccX, 5);
+//		OLED_ShowSignedNum(3, 8, IMU_Structure.AccY, 5);
+//		OLED_ShowSignedNum(4, 8, IMU_Structure.AccZ, 5);
+				
+//		OLED_ShowSignedNum(2, 1, Remote_Control_Structure.THROTTLE ,5);
+//		OLED_ShowSignedNum(3, 1, Remote_Control_Structure.YAW, 5);
+//		OLED_ShowSignedNum(4, 1, Remote_Control_Structure.PITCH, 5);	
+//		OLED_ShowSignedNum(2, 8, Remote_Control_Structure.ROLL, 5);
+//		OLED_ShowSignedNum(3, 8, IMU_Structure.AccY, 5);
+//		OLED_ShowSignedNum(4, 8, IMU_Structure.AccZ, 5);
+		OLED_ShowSignedNum(1, 1, Attitude_Structure.Pitch, 4);
+		OLED_ShowSignedNum(1,6,(int32_t)(Attitude_Structure.Pitch*1000)%1000,4);
+		OLED_ShowSignedNum(2, 1, Attitude_Structure.Roll, 5);
+		OLED_ShowSignedNum(3, 1, Attitude_Structure.Yaw, 5);
 
-
-//		OLED_ShowSignedNum(2, 1, Calibrate_Structure_Acc.Ox, 5);
-//		OLED_ShowSignedNum(3, 1, Calibrate_Structure_Acc.Oy, 5);
-//		OLED_ShowSignedNum(4, 1, Calibrate_Structure_Acc.Oz, 5);
 //		OLED_ShowSignedNum(2, 8, Calibrate_Structure_Acc.Rx, 5);
 //		OLED_ShowSignedNum(3, 8, Calibrate_Structure_Acc.Ry, 5);
 //		OLED_ShowSignedNum(4, 8, Calibrate_Structure_Acc.Rz, 5);
 
-
-
-//		OLED_ShowString(1,1,"Time:");
-//		OLED_ShowNum(1,6,(TIM_GetCapture2(TIM1)+1),5);
-//		OLED_ShowString(2,1,"Time:");
-//		OLED_ShowNum(2,6,(TIM_GetCapture3(TIM1)+1)-(TIM_GetCapture4(TIM1)+1),5);
-//		OLED_ShowString(3,1,"Time:");
-//		OLED_ShowNum(3,6,(TIM_GetCapture2(TIM4)+1),5);
-//		OLED_ShowString(4,1,"Time:");
-//		OLED_ShowNum(4,6,(TIM_GetCapture4(TIM4)+1)-(TIM_GetCapture3(TIM4)+1),5);
 	}
 
 
@@ -107,7 +120,7 @@ void TIM3_IRQHandler(void)
 	{
 		imu_time++;
 		serial_time++;
-		if(imu_time>=20)
+		if(imu_time>=10)
 		{
 			imu_Flag=1;
 

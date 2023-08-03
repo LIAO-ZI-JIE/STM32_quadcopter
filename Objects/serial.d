@@ -33,3 +33,4 @@
 .\objects\serial.o: .\User\Struct.h
 .\objects\serial.o: Hardware\Serial.h
 .\objects\serial.o: Hardware\LED.h
+.\objects\serial.o: Hardware\MPU9250.h

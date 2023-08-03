@@ -1,5 +1,6 @@
 #include "stm32f10x.h"                  // Device header
-
+#include "Struct.h"
+Motor_Struct Motor_Structure;
 void PWM_Init(void)
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
@@ -33,3 +34,11 @@ void PWM_Init(void)
 	TIM_OC4Init(TIM2,&TIM_OCInitStructure);
 	TIM_Cmd(TIM2,ENABLE);	
 }
+void Motor_Output(void)
+{
+	TIM_SetCompare1(TIM2,Motor_Structure.Motor1);
+	TIM_SetCompare2(TIM2,Motor_Structure.Motor2);
+	TIM_SetCompare3(TIM2,Motor_Structure.Motor3);
+	TIM_SetCompare4(TIM2,Motor_Structure.Motor4);
+}
+

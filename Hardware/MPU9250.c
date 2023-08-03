@@ -13,8 +13,7 @@
 #define Acc_Conversion  0.00119651659346  //1/8196*9.80665
 #define Gyro_Conversion 0.001065264436032 //3.141592653589793/180*0.06103515625
 Result_Struct Result_Structure;
-XYZ_Struct Acc_result;
-XYZ_Struct Mag_result;
+IMU_Struct IMU_Structure;
 Offset_Struct Offset_Structure={
 	11,
 	10,
@@ -27,12 +26,12 @@ uint8_t x_axis,y_axis,z_axis;
 uint8_t MPU9250_Mag_Calibrate_flag=0;
 uint8_t MPU9250_Acc_Gryo_Calibrate_flag=0;
 Calibrate_Struct Calibrate_Structure_Mag={
-	155.460098,
-	142.641998,
-	-535.208679,
-	194.611877,
-	293.154175,
-	203.484985
+	281.3422,
+	232.4079,
+	-413.8000,
+	213.7140,
+	229.9212,
+	247.6611
 };
 void MPU9250_WaitEvent(I2C_TypeDef* I2Cx, uint32_t I2C_EVENT)
 {
