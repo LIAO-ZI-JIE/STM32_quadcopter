@@ -1,5 +1,7 @@
 #include "stm32f10x.h"                  // Device header
 #include "Struct.h"
+PID_Struct PID_Roll_Structure;
+
 void PID_Init(PID_Struct *pid,float p,float i,float d,float maxI,float maxOut)
 {
     pid->kp=p;
@@ -61,7 +63,7 @@ void PID_CascadeCalc(CascadePID_Struct *pid,float outerRef,float outerFdb,float 
     PID_Calc(&pid->inner,pid->outer.output,innerFdb);//计算内环
     pid->output=pid->inner.output;//内环输出就是串级PID的输出
 }
-// 
+
 //CascadePID mypid;//创建串级PID结构体变量
 // 
 //int main()

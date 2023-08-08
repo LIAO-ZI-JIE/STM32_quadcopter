@@ -17,8 +17,7 @@ uint8_t ID;
 uint8_t imu_Flag,serial_flag;
 int16_t AX, AY, AZ, GX, GY, GZ;
 float a12,a22,a31,a32,a33;
-PID_Struct PID_Structure;
-
+float feedbackValue;
 
 int main(void)
 {
@@ -29,7 +28,7 @@ int main(void)
 	Serial_Init();
 	Timer_Init();
 	LED_Init();
-	PID_Init(&PID_Structure,10,1,5,800,1000);//初始化PID参数
+	PID_Init(&PID_Roll_Structure,10,1,5,35,150);//初始化PID参数
 	while(1)
 	{
 		
@@ -46,6 +45,8 @@ int main(void)
 			Get_Remote_Control();
 			
 			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
+//			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,0,0,0);
+
 			a12 =   2.0f * (q1 * q2 + q0 * q3);
 			a22 =   q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3;
 			a31 =   2.0f * (q0 * q1 + q2 * q3);
@@ -55,11 +56,27 @@ int main(void)
 			Attitude_Structure.Roll  = atan2f(a31, a33)*57.29577;
 			Attitude_Structure.Yaw   = -atan2f(a12, a22)*57.29577;
 			
-	//		Motor_Structure.Motor1=1000;
-	//		Motor_Structure.Motor2=1000;
-	//		Motor_Structure.Motor3=1000;
-	//		Motor_Structure.Motor4=1000;
-	//		Motor_Output();
+			
+			
+			
+			if(Remote_Control_Structure.THROTTLE>1100)
+			{
+				PID_Calc(&PID_Roll_Structure,(float)(Remote_Control_Structure.ROLL-1500)/12,Result_Structure.Acc.X*RadtoDeg);
+	//			Motor_Structure.Motor1=PID_Roll_Structure.output;
+				Motor_Structure.Motor1=Remote_Control_Structure.THROTTLE-PID_Roll_Structure.output;
+				Motor_Structure.Motor2=Remote_Control_Structure.THROTTLE+PID_Roll_Structure.output;
+				Motor_Structure.Motor3=Remote_Control_Structure.THROTTLE+PID_Roll_Structure.output;
+				Motor_Structure.Motor4=Remote_Control_Structure.THROTTLE-PID_Roll_Structure.output;	
+			}
+			else
+			{
+				Motor_Structure.Motor1=1100;
+				Motor_Structure.Motor2=1100;
+				Motor_Structure.Motor3=1100;
+				Motor_Structure.Motor4=1100;
+			}
+
+			Motor_Output();
 			imu_Flag=0;
 		}
 		if(serial_flag==1)
@@ -68,10 +85,7 @@ int main(void)
 			
 			serial_flag=0;
 		}
-//		Motor_Structure.Motor1=1000;
-//		Motor_Structure.Motor2=1000;
-//		Motor_Structure.Motor3=1000;
-//		Motor_Structure.Motor4=1000;
+
 //		Motor_Output();
 //		ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
 //						   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,

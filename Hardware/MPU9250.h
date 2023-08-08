@@ -1,6 +1,8 @@
 #ifndef __MPU9250_H
 #define __MPU9250_H
 
+#define RadtoDeg    57.324841f	
+
 void MPU9250_WriteReg(uint8_t RegAddress, uint8_t Data);
 uint8_t MPU9250_ReadReg(uint8_t RegAddress);
 

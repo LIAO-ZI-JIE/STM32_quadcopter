@@ -16,6 +16,7 @@
 #include "LED.h"
 #include "MPU9250.h"
 
+
 uint8_t Serial_RxData;
 uint8_t Serial_RxFlag;
 
@@ -198,17 +199,21 @@ void ANO_DT_Data_Exchange(void)
 	if(f.send_status)
 	{
 		f.send_status = 0;
-		ANO_DT_Send_Status(Attitude_Structure.Roll,Attitude_Structure.Pitch,Attitude_Structure.Yaw,0,0,1);
+//		ANO_DT_Send_Status(Attitude_Structure.Roll,Attitude_Structure.Pitch,Attitude_Structure.Yaw,0,0,1);
 	}	
 //////////////////////////////////////// 发送传感器信息 //////////////////////////////////////////
 	else if(f.send_senser)
 	{
 		f.send_senser = 0;
+		ANO_DT_Send_Status(Attitude_Structure.Roll,Attitude_Structure.Pitch,Attitude_Structure.Yaw,0,0,1);
+
 		ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
 						   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
 						   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
 						   0);
-		Data_Send_AngleRate(Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
+//		Data_Send_AngleRate(Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Mag.X,Result_Structure.Mag.Z);
+		Data_Send_AngleRate(Result_Structure.Acc.X*RadtoDeg,Attitude_Structure.Roll,PID_Roll_Structure.output,PID_Roll_Structure.error,PID_Roll_Structure.integral,Motor_Structure.Motor1,1,1);
+
 		#if defined (ROL_PID_DEBUG)   //ROLL角调试
 			Data_Send_AngleRate(Gyr_rad.X*RadtoDeg,PID_ROL_Rate.Pout,PID_ROL_Rate.Iout,PID_ROL_Rate.Dout,
 		                       PID_ROL_Angle.Error,PID_ROL_Angle.Pout,PID_ROL_Angle.Iout,PID_ROL_Angle.Dout);
@@ -229,13 +234,13 @@ void ANO_DT_Data_Exchange(void)
 	else if(f.send_rcdata)
 	{
 		f.send_rcdata = 0;
-//		ANO_DT_Send_RCData(Remote_Control_Structure.THROTTLE,Remote_Control_Structure.YAW,Remote_Control_Structure.ROLL,Remote_Control_Structure.PITCH,0,0,0,0,0,0);
+		ANO_DT_Send_RCData(Remote_Control_Structure.THROTTLE,Remote_Control_Structure.YAW,Remote_Control_Structure.ROLL,Remote_Control_Structure.PITCH,0,0,0,0,0,0);
 	}	
 /////////////////////////////////////////////////////////////////////////////////////	
 	else if(f.send_motopwm)
 	{
 		f.send_motopwm = 0;
-		//ANO_DT_Send_MotoPWM(Moto_PWM_1,Moto_PWM_2,Moto_PWM_3,Moto_PWM_4,5,6,7,8);
+		ANO_DT_Send_MotoPWM(Motor_Structure.Motor1,Motor_Structure.Motor2,Motor_Structure.Motor3,Motor_Structure.Motor4,5,6,7,8);
 	}	
 /////////////////////////////////////////////////////////////////////////////////////
 	else if(f.send_power)
@@ -249,7 +254,7 @@ void ANO_DT_Data_Exchange(void)
 //		ANO_DT_Send_PID(1,PID_ROL_Rate.P,PID_ROL_Rate.I,PID_ROL_Rate.D,
 //		                  PID_PIT_Rate.P,PID_PIT_Rate.I,PID_PIT_Rate.D,
 //		                  PID_YAW_Rate.P,PID_YAW_Rate.I,PID_YAW_Rate.D);
-		ANO_DT_Send_PID(1,0,1,32,
+		ANO_DT_Send_PID(1,PID_Roll_Structure.kp,PID_Roll_Structure.ki,PID_Roll_Structure.kd,
 		                  0,1,32,
 		                  0,1,32);
 
@@ -375,11 +380,13 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
 		if(*(data_buf+4)==0X01)
 		{
 
+			MPU9250_Acc_Gryo_Calibrate_flag=1;
 //			SENSER_FLAG_SET(ACC_OFFSET);//加速度校准
 //			ACC_OFFSET_RAW.X = 0;ACC_OFFSET_RAW.Y = 0;ACC_OFFSET_RAW.Z = 0;
 		}
 		if(*(data_buf+4)==0X02)
 		{
+			MPU9250_Acc_Gryo_Calibrate_flag=1;
 //			SENSER_FLAG_SET(GYRO_OFFSET);//陀螺仪校准
 //			GYRO_OFFSET_RAW.X = 0;GYRO_OFFSET_RAW.Y = 0;GYRO_OFFSET_RAW.Z = 0;
 		}
@@ -425,6 +432,9 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
 
 	if(*(data_buf+2)==0X10)								//PID1
     {
+        PID_Roll_Structure.kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        PID_Roll_Structure.ki = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        PID_Roll_Structure.kd = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
 //        PID_ROL_Rate.P = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
 //        PID_ROL_Rate.I = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
 //        PID_ROL_Rate.D = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
@@ -446,7 +456,7 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
 //        PID_PIT_Angle.P 	= 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
 //        PID_PIT_Angle.I 	= 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
 //        PID_PIT_Angle.D 	= 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
-//        PID_YAW_Angle.P	    = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+//        PID_YAW_Angle.P	 = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
 //        PID_YAW_Angle.I 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
 //        PID_YAW_Angle.D 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
 			 

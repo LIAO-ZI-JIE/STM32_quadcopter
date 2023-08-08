@@ -112,11 +112,14 @@ typedef struct
     PID_Struct outer;//外环
     float output;//串级输出，等于inner.output
 }CascadePID_Struct;
+
+
 extern IMU_Struct IMU_Structure;
 extern Attitude_Struct Attitude_Structure;
 extern Remote_Control_Struct Remote_Control_Structure;
 extern Motor_Struct Motor_Structure;
 extern Result_Struct Result_Structure;
+extern PID_Struct PID_Roll_Structure;
 
 #endif
 

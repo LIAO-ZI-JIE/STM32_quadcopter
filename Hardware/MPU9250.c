@@ -10,8 +10,8 @@
 #include "oled.h"
 #include "Serial.h"
 #define MPU9250_ADDRESS		0xD0
-#define Acc_Conversion  0.00119651659346  //1/8196*9.80665
-#define Gyro_Conversion 0.001065264436032 //3.141592653589793/180*0.06103515625
+#define Acc_Conversion  0.00119651f  //1/8196*9.80665
+#define Gyro_Conversion 0.00026631f //3.141592653589793/180*0.0152587890625
 Result_Struct Result_Structure;
 IMU_Struct IMU_Structure;
 Offset_Struct Offset_Structure={
@@ -173,9 +173,9 @@ void MPU9250_Init(void)
 	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_1, 0x01);		//選擇x軸陀螺儀時鐘
 	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_2, 0x00);//設置六軸全輸出
 	MPU9250_WriteReg(MPU9250_RA_INT_ENABLE, 0x00);//禁止中斷
-	MPU9250_WriteReg(CONFIG, 0x02);      //輸出頻率1000hz濾波參數98
+	MPU9250_WriteReg(CONFIG, 0x00);      //輸出頻率1000hz濾波參數98
 	MPU9250_WriteReg(SMPLRT_DIV, 0x00);  //輸出頻率不分頻(1kHz) 
-	MPU9250_WriteReg(GYRO_CONFIG, 0x18); //2000deg/s
+	MPU9250_WriteReg(GYRO_CONFIG, 0x08); //500deg/s
 	MPU9250_WriteReg(ACCEL_CONFIG_2, 0x04);//濾波20
 	MPU9250_WriteReg(ACCEL_CONFIG, 0x08);//0x00/+-2g. 0x08/+-4g. 0x10/+-8g. 0x18(????16G)
 	
