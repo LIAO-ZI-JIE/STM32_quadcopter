@@ -1,7 +1,8 @@
 #include "stm32f10x.h"                  // Device header
 #include "Struct.h"
-PID_Struct PID_Roll_Structure;
-
+PID_Struct PID_Structure;
+CascadePID_Struct PID_Roll_Structure;
+float D_Out,P_Out;
 void PID_Init(PID_Struct *pid,float p,float i,float d,float maxI,float maxOut)
 {
     pid->kp=p;
@@ -20,8 +21,10 @@ void PID_Calc(PID_Struct *pid,float reference,float feedback)
     pid->error=reference-feedback;//计算新error
     //计算微分
     float dout=(pid->error-pid->lastError)*pid->kd;
+    pid->D_Out=dout;
     //计算比例
     float pout=pid->error*pid->kp;
+	pid->P_Out=pout;
     //计算积分
     pid->integral+=pid->error*pid->ki;
     //积分限幅

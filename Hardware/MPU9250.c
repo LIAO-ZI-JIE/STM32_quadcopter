@@ -18,20 +18,20 @@ Offset_Struct Offset_Structure={
 	11,
 	10,
 	-642,
-	160,
-	-165,
-	-7
+	651,
+	-684,
+	-36
 };
 uint8_t x_axis,y_axis,z_axis; 
 uint8_t MPU9250_Mag_Calibrate_flag=0;
 uint8_t MPU9250_Acc_Gryo_Calibrate_flag=0;
 Calibrate_Struct Calibrate_Structure_Mag={
-	281.3422,
-	232.4079,
-	-413.8000,
-	213.7140,
-	229.9212,
-	247.6611
+	109.5749,
+	157.5716,
+	-149.5112,
+	257.2241,
+	267.5712,
+	244.7495
 };
 void MPU9250_WaitEvent(I2C_TypeDef* I2Cx, uint32_t I2C_EVENT)
 {
@@ -173,7 +173,7 @@ void MPU9250_Init(void)
 	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_1, 0x01);		//選擇x軸陀螺儀時鐘
 	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_2, 0x00);//設置六軸全輸出
 	MPU9250_WriteReg(MPU9250_RA_INT_ENABLE, 0x00);//禁止中斷
-	MPU9250_WriteReg(CONFIG, 0x00);      //輸出頻率1000hz濾波參數98
+	MPU9250_WriteReg(CONFIG, 0x02);      //輸出頻率1000hz濾波參數92
 	MPU9250_WriteReg(SMPLRT_DIV, 0x00);  //輸出頻率不分頻(1kHz) 
 	MPU9250_WriteReg(GYRO_CONFIG, 0x08); //500deg/s
 	MPU9250_WriteReg(ACCEL_CONFIG_2, 0x04);//濾波20
@@ -244,6 +244,7 @@ void MPU9250_GetData(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
 
 void MPU9250_GetData_continuous(IMU_Struct *IMU_Structure)
 {
+//	if(MPU9250_GetID() & 0x00) return;
 	I2C_GenerateSTART(I2C2, ENABLE);
 	MPU9250_WaitEvent(I2C2, I2C_EVENT_MASTER_MODE_SELECT);
 	

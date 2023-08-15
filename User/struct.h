@@ -103,7 +103,7 @@ typedef struct
    	float kp,ki,kd;//三个系数
     float error,lastError;//误差、上次误差
     float integral,maxIntegral;//积分、积分限幅
-    float output,maxOutput;//输出、输出限幅
+    float P_Out,I_Out,D_Out,output,maxOutput;//输出、输出限幅
 }PID_Struct;
 //串级PID的结构体，包含两个单级PID
 typedef struct
@@ -119,8 +119,9 @@ extern Attitude_Struct Attitude_Structure;
 extern Remote_Control_Struct Remote_Control_Structure;
 extern Motor_Struct Motor_Structure;
 extern Result_Struct Result_Structure;
-extern PID_Struct PID_Roll_Structure;
-
+extern PID_Struct PID_Structure;
+extern Offset_Struct Offset_Structure;
+extern CascadePID_Struct PID_Roll_Structure;
 #endif
 
 

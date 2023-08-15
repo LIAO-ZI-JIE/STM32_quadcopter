@@ -23,5 +23,7 @@ void ANO_DT_Send_PID(uint8_t group,float p1_p,float p1_i,float p1_d,float p2_p,f
 
 //自定义帧
 void Data_Send_AngleRate(float data1,float data2,float data3,float data4,float data5,float data6,float data7,float data8); //角速度调试环
+void Data_Send_Angle2Rate(float data1,float data2,float data3,float data4,float data5,float data6,float data7,float data8);
+
 //void Data_Send_Filter(void);    //滤波调试
 #endif

@@ -28,23 +28,30 @@ int main(void)
 	Serial_Init();
 	Timer_Init();
 	LED_Init();
-	PID_Init(&PID_Roll_Structure,10,1,5,35,150);//初始化PID参数
+	PID_Init(&PID_Structure,1.655,0.022,1.792,50,250);//初始化PID参数
+	PID_Init(&PID_Roll_Structure.inner,1.655,0.022,1.792,50,250);
+	PID_Init(&PID_Roll_Structure.outer,0.725,0.001,9.568,30,30);
 	while(1)
 	{
 		
+	
 
 		
 		ID=AK8963_GetID();
+		
 		if(imu_Flag==1)
 		{	
-			
+			ID=AK8963_GetID();
 			MPU9250_GetData_continuous(&IMU_Structure);
 			Delay_us(10);
 			READ_MPU9250_MAG(&IMU_Structure);
 			MPU9250_Calibrate();
 			Get_Remote_Control();
-			
-			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
+			ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
+							   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
+							   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
+							   0);
+			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,-Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
 //			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,0,0,0);
 
 			a12 =   2.0f * (q1 * q2 + q0 * q3);
@@ -54,19 +61,25 @@ int main(void)
 			a33 =   q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3;
 			Attitude_Structure.Pitch = asinf(a32)*57.29577;
 			Attitude_Structure.Roll  = atan2f(a31, a33)*57.29577;
-			Attitude_Structure.Yaw   = -atan2f(a12, a22)*57.29577;
+			Attitude_Structure.Yaw   = atan2f(a12, a22)*57.29577;
 			
 			
 			
 			
 			if(Remote_Control_Structure.THROTTLE>1100)
 			{
-				PID_Calc(&PID_Roll_Structure,(float)(Remote_Control_Structure.ROLL-1500)/12,Result_Structure.Acc.X*RadtoDeg);
-	//			Motor_Structure.Motor1=PID_Roll_Structure.output;
-				Motor_Structure.Motor1=Remote_Control_Structure.THROTTLE-PID_Roll_Structure.output;
-				Motor_Structure.Motor2=Remote_Control_Structure.THROTTLE+PID_Roll_Structure.output;
-				Motor_Structure.Motor3=Remote_Control_Structure.THROTTLE+PID_Roll_Structure.output;
-				Motor_Structure.Motor4=Remote_Control_Structure.THROTTLE-PID_Roll_Structure.output;	
+//				PID_Calc(&PID_Structure,0,Result_Structure.Gyro.X*RadtoDeg);
+//				Motor_Structure.Motor1=Remote_Control_Structure.THROTTLE+PID_Structure.output;
+//				Motor_Structure.Motor2=Remote_Control_Structure.THROTTLE-PID_Structure.output;
+//				Motor_Structure.Motor3=Remote_Control_Structure.THROTTLE-PID_Structure.output;
+//				Motor_Structure.Motor4=Remote_Control_Structure.THROTTLE+PID_Structure.output;	
+				
+				
+				PID_CascadeCalc(&PID_Roll_Structure,(float)(Remote_Control_Structure.ROLL-1500)/12,Attitude_Structure.Roll,Result_Structure.Gyro.X*RadtoDeg);
+				Motor_Structure.Motor1=Remote_Control_Structure.THROTTLE+PID_Roll_Structure.output;
+				Motor_Structure.Motor2=Remote_Control_Structure.THROTTLE-PID_Roll_Structure.output;
+				Motor_Structure.Motor3=Remote_Control_Structure.THROTTLE-PID_Roll_Structure.output;
+				Motor_Structure.Motor4=Remote_Control_Structure.THROTTLE+PID_Roll_Structure.output;	
 			}
 			else
 			{
@@ -82,7 +95,7 @@ int main(void)
 		if(serial_flag==1)
 		{
 			ANO_DT_Data_Exchange();
-			
+
 			serial_flag=0;
 		}
 
@@ -113,10 +126,10 @@ int main(void)
 //		OLED_ShowSignedNum(2, 8, Remote_Control_Structure.ROLL, 5);
 //		OLED_ShowSignedNum(3, 8, IMU_Structure.AccY, 5);
 //		OLED_ShowSignedNum(4, 8, IMU_Structure.AccZ, 5);
-		OLED_ShowSignedNum(1, 1, Attitude_Structure.Pitch, 4);
-		OLED_ShowSignedNum(1,6,(int32_t)(Attitude_Structure.Pitch*1000)%1000,4);
-		OLED_ShowSignedNum(2, 1, Attitude_Structure.Roll, 5);
-		OLED_ShowSignedNum(3, 1, Attitude_Structure.Yaw, 5);
+//		OLED_ShowSignedNum(1, 1, Attitude_Structure.Pitch, 4);
+//		OLED_ShowSignedNum(1,6,(int32_t)(Attitude_Structure.Pitch*1000)%1000,4);
+//		OLED_ShowSignedNum(2, 1, Attitude_Structure.Roll, 5);
+//		OLED_ShowSignedNum(3, 1, Attitude_Structure.Yaw, 5);
 
 //		OLED_ShowSignedNum(2, 8, Calibrate_Structure_Acc.Rx, 5);
 //		OLED_ShowSignedNum(3, 8, Calibrate_Structure_Acc.Ry, 5);

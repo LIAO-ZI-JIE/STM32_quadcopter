@@ -15,6 +15,7 @@
 #include "Serial.h"
 #include "LED.h"
 #include "MPU9250.h"
+#include "PID.h"
 
 
 uint8_t Serial_RxData;
@@ -212,8 +213,10 @@ void ANO_DT_Data_Exchange(void)
 						   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
 						   0);
 //		Data_Send_AngleRate(Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Mag.X,Result_Structure.Mag.Z);
-		Data_Send_AngleRate(Result_Structure.Acc.X*RadtoDeg,Attitude_Structure.Roll,PID_Roll_Structure.output,PID_Roll_Structure.error,PID_Roll_Structure.integral,Motor_Structure.Motor1,1,1);
-
+//		Data_Send_AngleRate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Structure.output,PID_Structure.error,PID_Structure.integral,PID_Structure.P_Out,PID_Structure.D_Out,Offset_Structure.Gyro_Offset_Z);
+//		Data_Send_AngleRate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Roll_Structure.outer.output,PID_Roll_Structure.outer.integral,PID_Roll_Structure.inner.integral,PID_Roll_Structure.inner.output,(float)(Remote_Control_Structure.ROLL-1500)/-12,PID_Roll_Structure.outer.error);
+		Data_Send_AngleRate(PID_Roll_Structure.outer.error,PID_Roll_Structure.outer.P_Out,PID_Roll_Structure.outer.integral,PID_Roll_Structure.outer.D_Out,PID_Roll_Structure.inner.error,PID_Roll_Structure.inner.P_Out,PID_Roll_Structure.inner.integral,PID_Roll_Structure.inner.D_Out);
+        Data_Send_Angle2Rate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Roll_Structure.outer.output,PID_Roll_Structure.output,1,1,1,1);
 		#if defined (ROL_PID_DEBUG)   //ROLL角调试
 			Data_Send_AngleRate(Gyr_rad.X*RadtoDeg,PID_ROL_Rate.Pout,PID_ROL_Rate.Iout,PID_ROL_Rate.Dout,
 		                       PID_ROL_Angle.Error,PID_ROL_Angle.Pout,PID_ROL_Angle.Iout,PID_ROL_Angle.Dout);
@@ -254,7 +257,7 @@ void ANO_DT_Data_Exchange(void)
 //		ANO_DT_Send_PID(1,PID_ROL_Rate.P,PID_ROL_Rate.I,PID_ROL_Rate.D,
 //		                  PID_PIT_Rate.P,PID_PIT_Rate.I,PID_PIT_Rate.D,
 //		                  PID_YAW_Rate.P,PID_YAW_Rate.I,PID_YAW_Rate.D);
-		ANO_DT_Send_PID(1,PID_Roll_Structure.kp,PID_Roll_Structure.ki,PID_Roll_Structure.kd,
+		ANO_DT_Send_PID(1,PID_Roll_Structure.inner.kp,PID_Roll_Structure.inner.ki,PID_Roll_Structure.inner.kd,
 		                  0,1,32,
 		                  0,1,32);
 
@@ -266,13 +269,19 @@ void ANO_DT_Data_Exchange(void)
 //		ANO_DT_Send_PID(2,PID_ROL_Angle.P,PID_ROL_Angle.I,PID_ROL_Angle.D,
 //						  PID_PIT_Angle.P,PID_PIT_Angle.I,PID_PIT_Angle.D,
 //		                  PID_YAW_Angle.P,PID_YAW_Angle.I,PID_YAW_Angle.D);
+		ANO_DT_Send_PID(2,PID_Roll_Structure.outer.kp,PID_Roll_Structure.outer.ki,PID_Roll_Structure.outer.kd,
+				  0,1,32,
+				  0,1,32);
 	}
 /////////////////////////////////////////////////////////////////////////////////////
 	else if(f.send_pid3)
 	{
 		f.send_pid3 = 0;
-//	  ANO_DT_Send_PID(3,PID_ALT_Rate.P,PID_ALT_Rate.I,PID_ALT_Rate.D,
-//		                  PID_ALT.P,PID_ALT.I,PID_ALT.D,0,0,0);
+		
+		
+		
+	  ANO_DT_Send_PID(3,PID_Structure.kp,PID_Structure.ki,PID_Structure.kd,
+		                  1,0.1,0,0,0,1);
 		
 		
 	}else if(f.send_pid4)//清除上位机PID数据显示
@@ -432,9 +441,9 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
 
 	if(*(data_buf+2)==0X10)								//PID1
     {
-        PID_Roll_Structure.kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
-        PID_Roll_Structure.ki = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
-        PID_Roll_Structure.kd = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        PID_Roll_Structure.inner.kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        PID_Roll_Structure.inner.ki = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        PID_Roll_Structure.inner.kd = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
 //        PID_ROL_Rate.P = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
 //        PID_ROL_Rate.I = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
 //        PID_ROL_Rate.D = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
@@ -444,12 +453,16 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
 //        PID_YAW_Rate.P = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
 //        PID_YAW_Rate.I = 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
 //        PID_YAW_Rate.D = 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+		
         ANO_DT_Send_Check(*(data_buf+2),sum);
 
     }
     if(*(data_buf+2)==0X11)								//PID2
     {
 		
+		PID_Roll_Structure.outer.kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        PID_Roll_Structure.outer.ki = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        PID_Roll_Structure.outer.kd = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
 //        PID_ROL_Angle.P 	= 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
 //        PID_ROL_Angle.I 	= 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
 //        PID_ROL_Angle.D 	= 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
@@ -459,12 +472,14 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
 //        PID_YAW_Angle.P	 = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
 //        PID_YAW_Angle.I 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
 //        PID_YAW_Angle.D 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
-			 
         ANO_DT_Send_Check(*(data_buf+2),sum);
 
     }
   if(*(data_buf+2)==0X12)								//PID3
   {	
+		PID_Structure.kp 	= 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+		PID_Structure.ki 	= 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+		PID_Structure.kd 	= 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
 //		PID_ALT_Rate.P 	= 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
 //		PID_ALT_Rate.I 	= 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
 //		PID_ALT_Rate.D 	= 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
@@ -817,7 +832,66 @@ void Data_Send_AngleRate(float data1,float data2,float data3,float data4,float d
 	ANO_DT_Send_Data(data_to_send, _cnt);
 }
 
+void Data_Send_Angle2Rate(float data1,float data2,float data3,float data4,float data5,float data6,float data7,float data8)
+{
+	u8 _cnt=0,sum = 0,i;
+	float _temp;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xF2; 
+	data_to_send[_cnt++]=0;
+	
+	_temp = data1;//RadtoDeg
+	data_to_send[_cnt++]=BYTE3(_temp);
+	data_to_send[_cnt++]=BYTE2(_temp);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = data2;
+	data_to_send[_cnt++]=BYTE3(_temp);
+	data_to_send[_cnt++]=BYTE2(_temp);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = data3;
+	data_to_send[_cnt++]=BYTE3(_temp);
+	data_to_send[_cnt++]=BYTE2(_temp);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = data4;
+	data_to_send[_cnt++]=BYTE3(_temp);
+	data_to_send[_cnt++]=BYTE2(_temp);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = data5;
+	data_to_send[_cnt++]=BYTE3(_temp);
+	data_to_send[_cnt++]=BYTE2(_temp);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = data6;
+	data_to_send[_cnt++]=BYTE3(_temp);
+	data_to_send[_cnt++]=BYTE2(_temp);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = data7;
+	data_to_send[_cnt++]=BYTE3(_temp);
+	data_to_send[_cnt++]=BYTE2(_temp);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = data8;
+	data_to_send[_cnt++]=BYTE3(_temp);
+	data_to_send[_cnt++]=BYTE2(_temp);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
 
+	data_to_send[3] = _cnt-4;
+
+	for(i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+		
+	data_to_send[_cnt++] = sum;
+	
+	ANO_DT_Send_Data(data_to_send, _cnt);
+}
 ////滤波效果观察函数调试
 //void Data_Send_Filter(void)
 //{
