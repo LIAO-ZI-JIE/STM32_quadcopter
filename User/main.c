@@ -29,8 +29,8 @@ int main(void)
 	Timer_Init();
 	LED_Init();
 	PID_Init(&PID_Structure,1.655,0.022,1.792,50,250);//初始化PID参数
-	PID_Init(&PID_Roll_Structure.inner,1.655,0.022,1.792,50,250);
-	PID_Init(&PID_Roll_Structure.outer,0.725,0.001,9.568,30,30);
+	PID_Init(&PID_Roll_Structure.inner,0,0,0,75,250);
+	PID_Init(&PID_Roll_Structure.outer,0,0,0,30,100);
 	while(1)
 	{
 		
