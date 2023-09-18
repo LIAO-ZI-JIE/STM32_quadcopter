@@ -51,7 +51,7 @@ int main(void)
 							   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
 							   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
 							   0);
-			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,-Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Mag.X,Result_Structure.Mag.Y,Result_Structure.Mag.Z);
+			MahonyAHRSupdate(Result_Structure.Gyro.X,-Result_Structure.Gyro.Y,-Result_Structure.Gyro.Z,-Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Mag.Y,-Result_Structure.Mag.X,Result_Structure.Mag.Z);
 //			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,0,0,0);
 
 			a12 =   2.0f * (q1 * q2 + q0 * q3);
@@ -59,7 +59,7 @@ int main(void)
 			a31 =   2.0f * (q0 * q1 + q2 * q3);
 			a32 =   2.0f * (q1 * q3 - q0 * q2);
 			a33 =   q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3;
-			Attitude_Structure.Pitch = asinf(a32)*57.29577;
+			Attitude_Structure.Pitch = -asinf(a32)*57.29577;
 			Attitude_Structure.Roll  = atan2f(a31, a33)*57.29577;
 			Attitude_Structure.Yaw   = atan2f(a12, a22)*57.29577;
 			
