@@ -1,7 +1,7 @@
 .\objects\button.o: Hardware\Button.c
 .\objects\button.o: .\Start\stm32f10x.h
 .\objects\button.o: .\Start\core_cm3.h
-.\objects\button.o: C:\keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\button.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\button.o: .\Start\system_stm32f10x.h
 .\objects\button.o: .\User\stm32f10x_conf.h
 .\objects\button.o: .\Libaray\stm32f10x_adc.h

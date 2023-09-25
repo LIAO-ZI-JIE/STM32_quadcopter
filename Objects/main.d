@@ -1,7 +1,7 @@
 .\objects\main.o: User\main.c
 .\objects\main.o: .\Start\stm32f10x.h
 .\objects\main.o: .\Start\core_cm3.h
-.\objects\main.o: C:\keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\main.o: .\Start\system_stm32f10x.h
 .\objects\main.o: .\User\stm32f10x_conf.h
 .\objects\main.o: .\Libaray\stm32f10x_adc.h
@@ -28,7 +28,7 @@
 .\objects\main.o: .\Libaray\stm32f10x_usart.h
 .\objects\main.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\main.o: .\Libaray\misc.h
-.\objects\main.o: C:\keil\ARM\ARMCC\Bin\..\include\Math.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\Math.h
 .\objects\main.o: .\Hardware\OLED.h
 .\objects\main.o: .\System\Delay.h
 .\objects\main.o: .\Hardware\IC.h
@@ -36,7 +36,7 @@
 .\objects\main.o: .\Hardware\MPU9250.h
 .\objects\main.o: .\Hardware\MPU9250_Reg.h
 .\objects\main.o: .\Hardware\Serial.h
-.\objects\main.o: C:\keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: .\Hardware\PWM.h
 .\objects\main.o: .\System\Timer.h
 .\objects\main.o: .\Hardware\LED.h

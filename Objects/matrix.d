@@ -1,7 +1,7 @@
 .\objects\matrix.o: Math\Matrix.c
 .\objects\matrix.o: .\Start\stm32f10x.h
 .\objects\matrix.o: .\Start\core_cm3.h
-.\objects\matrix.o: C:\keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\matrix.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\matrix.o: .\Start\system_stm32f10x.h
 .\objects\matrix.o: .\User\stm32f10x_conf.h
 .\objects\matrix.o: .\Libaray\stm32f10x_adc.h
@@ -28,8 +28,8 @@
 .\objects\matrix.o: .\Libaray\stm32f10x_usart.h
 .\objects\matrix.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\matrix.o: .\Libaray\misc.h
-.\objects\matrix.o: C:\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-.\objects\matrix.o: C:\keil\ARM\ARMCC\Bin\..\include\math.h
-.\objects\matrix.o: C:\keil\ARM\ARMCC\Bin\..\include\string.h
+.\objects\matrix.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\matrix.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\matrix.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\matrix.o: .\Hardware\LED.h
 .\objects\matrix.o: .\Hardware\oled.h

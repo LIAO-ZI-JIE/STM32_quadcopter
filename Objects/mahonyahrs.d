@@ -1,7 +1,7 @@
 .\objects\mahonyahrs.o: User\MahonyAHRS.c
 .\objects\mahonyahrs.o: .\Start\stm32f10x.h
 .\objects\mahonyahrs.o: .\Start\core_cm3.h
-.\objects\mahonyahrs.o: C:\keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\mahonyahrs.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\mahonyahrs.o: .\Start\system_stm32f10x.h
 .\objects\mahonyahrs.o: .\User\stm32f10x_conf.h
 .\objects\mahonyahrs.o: .\Libaray\stm32f10x_adc.h
@@ -30,4 +30,4 @@
 .\objects\mahonyahrs.o: .\Libaray\misc.h
 .\objects\mahonyahrs.o: User\Struct.h
 .\objects\mahonyahrs.o: User\MahonyAHRS.h
-.\objects\mahonyahrs.o: C:\keil\ARM\ARMCC\Bin\..\include\math.h
+.\objects\mahonyahrs.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

@@ -1,15 +1,19 @@
 #include "stm32f10x.h"                  // Device header
 #include "Struct.h"
+#include "filter.h"
 PID_Struct PID_Structure;
 CascadePID_Struct PID_Roll_Structure;
 float D_Out,P_Out;
-void PID_Init(PID_Struct *pid,float p,float i,float d,float maxI,float maxOut)
+void PID_Init(PID_Struct *pid,float p,float i,float d,float maxI,float maxOut,float sample_freq, float cutoff_freq)
 {
     pid->kp=p;
     pid->ki=i;
     pid->kd=d;
     pid->maxIntegral=maxI;
     pid->maxOutput=maxOut;
+	lpf2pInit(&pid->dFilter,sample_freq,cutoff_freq);
+	lpf2pInit(&pid->eFilter,sample_freq,cutoff_freq);
+	
 }
  
 //进行一次pid计算
@@ -32,6 +36,30 @@ void PID_Calc(PID_Struct *pid,float reference,float feedback)
     else if(pid->integral < -pid->maxIntegral) pid->integral=-pid->maxIntegral;
     //计算输出
     pid->output=pout+dout+pid->integral;
+    //输出限幅
+    if(pid->output > pid->maxOutput) pid->output=pid->maxOutput;
+    else if(pid->output < -pid->maxOutput) pid->output=-pid->maxOutput;
+}
+void PID_Calc_lpf2(PID_Struct *pid,float reference,float feedback)
+{
+ 	//更新数据
+    pid->lastError=pid->error;//将旧error存起来
+	
+    pid->error=reference-feedback;//计算新error
+	pid->error=lpf2pApply(&pid->eFilter,pid->error);
+    //计算微分
+    float dout=(pid->error-pid->lastError)*pid->kd;
+	pid->D_Out = lpf2pApply(&pid->dFilter, dout);
+    //计算比例
+    float pout=pid->error*pid->kp;
+	pid->P_Out=pout;
+    //计算积分
+    pid->integral+=pid->error*pid->ki;
+    //积分限幅
+    if(pid->integral > pid->maxIntegral) pid->integral=pid->maxIntegral;
+    else if(pid->integral < -pid->maxIntegral) pid->integral=-pid->maxIntegral;
+    //计算输出
+    pid->output=pout+pid->D_Out+pid->integral;
     //输出限幅
     if(pid->output > pid->maxOutput) pid->output=pid->maxOutput;
     else if(pid->output < -pid->maxOutput) pid->output=-pid->maxOutput;
@@ -63,7 +91,7 @@ void PID_Calc(PID_Struct *pid,float reference,float feedback)
 void PID_CascadeCalc(CascadePID_Struct *pid,float outerRef,float outerFdb,float innerFdb)
 {
     PID_Calc(&pid->outer,outerRef,outerFdb);//计算外环
-    PID_Calc(&pid->inner,pid->outer.output,innerFdb);//计算内环
+    PID_Calc_lpf2(&pid->inner,pid->outer.output,innerFdb);//计算内环
     pid->output=pid->inner.output;//内环输出就是串级PID的输出
 }
 

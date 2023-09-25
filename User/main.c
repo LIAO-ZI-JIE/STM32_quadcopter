@@ -28,9 +28,9 @@ int main(void)
 	Serial_Init();
 	Timer_Init();
 	LED_Init();
-	PID_Init(&PID_Structure,1.655,0.022,1.792,50,250);//初始化PID参数
-	PID_Init(&PID_Roll_Structure.inner,0,0,0,75,250);
-	PID_Init(&PID_Roll_Structure.outer,0,0,0,30,100);
+	PID_Init(&PID_Structure,1.655,0.022,1.792,50,250,100,20);//初始化PID参数
+	PID_Init(&PID_Roll_Structure.inner,0,0,0,200,500,100,30);
+	PID_Init(&PID_Roll_Structure.outer,0,0,0,20,250,100,45);
 	while(1)
 	{
 		
@@ -87,6 +87,8 @@ int main(void)
 				Motor_Structure.Motor2=1100;
 				Motor_Structure.Motor3=1100;
 				Motor_Structure.Motor4=1100;
+				PID_Roll_Structure.inner.integral=0;
+				PID_Roll_Structure.outer.integral=0;
 			}
 
 			Motor_Output();
@@ -153,7 +155,7 @@ void TIM3_IRQHandler(void)
 
 			imu_time=0;
 		}
-		if(serial_time>=1)
+		if(serial_time>=5)
 		{
 
 			serial_flag=1;

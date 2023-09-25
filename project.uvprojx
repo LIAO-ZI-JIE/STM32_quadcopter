@@ -820,6 +820,21 @@
               <FileType>5</FileType>
               <FilePath>.\Math\Matrix.h</FilePath>
             </File>
+            <File>
+              <FileName>filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Math\filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>filter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Math\filter.h</FilePath>
+            </File>
+            <File>
+              <FileName>physicalConstants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Math\physicalConstants.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

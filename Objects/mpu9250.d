@@ -1,7 +1,7 @@
 .\objects\mpu9250.o: Hardware\MPU9250.c
 .\objects\mpu9250.o: .\Start\stm32f10x.h
 .\objects\mpu9250.o: .\Start\core_cm3.h
-.\objects\mpu9250.o: C:\keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\mpu9250.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\mpu9250.o: .\Start\system_stm32f10x.h
 .\objects\mpu9250.o: .\User\stm32f10x_conf.h
 .\objects\mpu9250.o: .\Libaray\stm32f10x_adc.h
@@ -29,12 +29,12 @@
 .\objects\mpu9250.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\mpu9250.o: .\Libaray\misc.h
 .\objects\mpu9250.o: Hardware\MPU9250_Reg.h
-.\objects\mpu9250.o: C:\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-.\objects\mpu9250.o: C:\keil\ARM\ARMCC\Bin\..\include\Math.h
+.\objects\mpu9250.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\mpu9250.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\Math.h
 .\objects\mpu9250.o: .\User\Struct.h
 .\objects\mpu9250.o: .\Math\Matrix.h
 .\objects\mpu9250.o: .\System\Delay.h
 .\objects\mpu9250.o: Hardware\LED.h
 .\objects\mpu9250.o: Hardware\oled.h
 .\objects\mpu9250.o: Hardware\Serial.h
-.\objects\mpu9250.o: C:\keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\mpu9250.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
