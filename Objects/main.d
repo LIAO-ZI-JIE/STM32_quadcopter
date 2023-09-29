@@ -42,4 +42,5 @@
 .\objects\main.o: .\Hardware\LED.h
 .\objects\main.o: User\MahonyAHRS.h
 .\objects\main.o: User\PID.h
+.\objects\main.o: .\Math\filter.h
 .\objects\main.o: .\Math\SortAver_Filter.h

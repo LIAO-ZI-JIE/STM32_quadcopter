@@ -12,6 +12,7 @@
 #include "LED.h"
 #include "MahonyAHRS.h"
 #include "PID.h"
+#include "filter.h"
 #include "SortAver_Filter.h"
 
 uint8_t ID;
@@ -19,9 +20,16 @@ uint8_t imu_Flag,serial_flag;
 int16_t AX, AY, AZ, GX, GY, GZ;
 float a12,a22,a31,a32,a33;
 float feedbackValue;
-
+lpf2pData Gryo_x_filter;
+lpf2pData Gryo_y_filter;
+lpf2pData Gryo_z_filter;
+lpf2pData Acc_x_filter;
+lpf2pData Acc_y_filter;
+lpf2pData Acc_z_filter;
 int main(void)
 {
+	
+	
 	PWM_Init();
 	OLED_Init();
 	IC_Init();
@@ -29,13 +37,22 @@ int main(void)
 	Serial_Init();
 	Timer_Init();
 	LED_Init();
+	
 	PID_Init(&PID_Structure,1.655,0.022,1.792,50,250,100,20);//初始化PID参数
 	PID_Init(&PID_Roll_Structure.inner,0,0,0,200,500,100,20);
 	PID_Init(&PID_Roll_Structure.outer,0,0,0,20,250,100,45);
+	lpf2pInit(&Gryo_x_filter,100,20);
+	lpf2pInit(&Gryo_y_filter,100,20);
+	lpf2pInit(&Gryo_z_filter,100,20);
+	lpf2pInit(&Acc_x_filter,100,5);
+	lpf2pInit(&Acc_y_filter,100,5);
+	lpf2pInit(&Acc_z_filter,100,5);
+	
 	while(1)
 	{
 		
-	
+		
+
 
 		
 		ID=AK8963_GetID();
@@ -46,12 +63,21 @@ int main(void)
 			MPU9250_GetData_continuous(&IMU_Structure);
 			Delay_us(10);
 			READ_MPU9250_MAG(&IMU_Structure);
+		  IMU_Structure.GyroX=lpf2pApply(&Gryo_x_filter,IMU_Structure.GyroX);
+			IMU_Structure.GyroY=lpf2pApply(&Gryo_y_filter,IMU_Structure.GyroY);
+			IMU_Structure.GyroZ=lpf2pApply(&Gryo_z_filter,IMU_Structure.GyroZ);
 			
-			SortAver_FilterXYZ(&IMU_Structure,&Filter_Acc,15);
+			
+			IMU_Structure.AccX=lpf2pApply(&Acc_x_filter,IMU_Structure.AccX);
+			IMU_Structure.AccY=lpf2pApply(&Acc_y_filter,IMU_Structure.AccY);
+			IMU_Structure.AccZ=lpf2pApply(&Acc_z_filter,IMU_Structure.AccZ);
+
+			
+//			SortAver_FilterXYZ(&IMU_Structure,&Filter_Acc,15);
 			MPU9250_Calibrate();
 			Get_Remote_Control();
 
-			ANO_DT_Send_Senser(Filter_Acc.X,Filter_Acc.Y,Filter_Acc.Z,
+			ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
 							   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
 							   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
 							   0);

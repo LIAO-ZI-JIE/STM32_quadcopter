@@ -11,7 +11,7 @@
 *******************************************************************************************/
 #include "stm32f10x.h"                  // Device header
 #include "Struct.h"
-#include "filter.h"
+#include "SortAver_Filter.h"
 
 #include "math.h"
 
