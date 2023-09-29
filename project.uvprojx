@@ -835,6 +835,16 @@
               <FileType>5</FileType>
               <FilePath>.\Math\physicalConstants.h</FilePath>
             </File>
+            <File>
+              <FileName>SortAver_Filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Math\SortAver_Filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>SortAver_Filter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Math\SortAver_Filter.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

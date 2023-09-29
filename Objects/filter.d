@@ -31,5 +31,5 @@
 .\objects\filter.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\filter.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\filter.o: .\User\Struct.h
-.\objects\filter.o: Math\filter.h
 .\objects\filter.o: Math\physicalConstants.h
+.\objects\filter.o: Math\filter.h

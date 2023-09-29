@@ -12,6 +12,7 @@
 #include "LED.h"
 #include "MahonyAHRS.h"
 #include "PID.h"
+#include "SortAver_Filter.h"
 
 uint8_t ID;
 uint8_t imu_Flag,serial_flag;
@@ -29,7 +30,7 @@ int main(void)
 	Timer_Init();
 	LED_Init();
 	PID_Init(&PID_Structure,1.655,0.022,1.792,50,250,100,20);//初始化PID参数
-	PID_Init(&PID_Roll_Structure.inner,0,0,0,200,500,100,30);
+	PID_Init(&PID_Roll_Structure.inner,0,0,0,200,500,100,20);
 	PID_Init(&PID_Roll_Structure.outer,0,0,0,20,250,100,45);
 	while(1)
 	{
@@ -45,12 +46,16 @@ int main(void)
 			MPU9250_GetData_continuous(&IMU_Structure);
 			Delay_us(10);
 			READ_MPU9250_MAG(&IMU_Structure);
+			
+			SortAver_FilterXYZ(&IMU_Structure,&Filter_Acc,15);
 			MPU9250_Calibrate();
 			Get_Remote_Control();
-			ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
+
+			ANO_DT_Send_Senser(Filter_Acc.X,Filter_Acc.Y,Filter_Acc.Z,
 							   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
 							   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
 							   0);
+	
 			MahonyAHRSupdate(Result_Structure.Gyro.X,-Result_Structure.Gyro.Y,-Result_Structure.Gyro.Z,-Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Mag.Y,-Result_Structure.Mag.X,Result_Structure.Mag.Z);
 //			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,0,0,0);
 

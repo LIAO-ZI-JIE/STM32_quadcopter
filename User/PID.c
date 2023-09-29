@@ -11,8 +11,8 @@ void PID_Init(PID_Struct *pid,float p,float i,float d,float maxI,float maxOut,fl
     pid->kd=d;
     pid->maxIntegral=maxI;
     pid->maxOutput=maxOut;
-	lpf2pInit(&pid->dFilter,sample_freq,cutoff_freq);
-	lpf2pInit(&pid->eFilter,sample_freq,cutoff_freq);
+		lpf2pInit(&pid->dFilter,sample_freq,cutoff_freq);
+		lpf2pInit(&pid->eFilter,sample_freq,cutoff_freq);
 	
 }
  

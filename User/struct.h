@@ -108,14 +108,21 @@ typedef struct {
   float delay_element_2;
 } lpf2pData;
 
+
+typedef struct
+{	
+	float X;
+	float Y;
+	float Z;
+}float_Struct;
 typedef struct
 {
    	float kp,ki,kd;//三个系数
     float error,lastError;//误差、上次误差
     float integral,maxIntegral;//积分、积分限幅
     float P_Out,I_Out,D_Out,output,maxOutput;//输出、输出限幅
-	lpf2pData dFilter;  //< filter for D term
-	lpf2pData eFilter;  //< filter for error term
+	  lpf2pData dFilter;  //< filter for D term
+	  lpf2pData eFilter;  //< filter for error term
 
 }PID_Struct;
 //串级PID的结构体，包含两个单级PID
@@ -136,6 +143,7 @@ extern Result_Struct Result_Structure;
 extern PID_Struct PID_Structure;
 extern Offset_Struct Offset_Structure;
 extern CascadePID_Struct PID_Roll_Structure;
+extern float_Struct Filter_Acc;
 #endif
 
 

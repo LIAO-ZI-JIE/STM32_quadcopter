@@ -29,5 +29,4 @@
 .\objects\pid.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\pid.o: .\Libaray\misc.h
 .\objects\pid.o: User\Struct.h
-.\objects\pid.o: .\Math\filter.h
-.\objects\pid.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\pid.o: User\filter.h
