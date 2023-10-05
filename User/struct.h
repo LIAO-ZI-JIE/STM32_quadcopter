@@ -1,5 +1,6 @@
 #ifndef _STRUCTURE_H
 #define _STRUCTURE_H
+#include "filter.h"
 typedef struct
 {
 	int16_t AccX;
@@ -98,15 +99,6 @@ typedef struct
 	uint16_t Motor3;
 	uint16_t Motor4;
 }Motor_Struct;
-typedef struct {
-  float a1;
-  float a2;
-  float b0;
-  float b1;
-  float b2;
-  float delay_element_1;
-  float delay_element_2;
-} lpf2pData;
 
 
 typedef struct
@@ -121,9 +113,8 @@ typedef struct
     float error,lastError;//误差、上次误差
     float integral,maxIntegral;//积分、积分限幅
     float P_Out,I_Out,D_Out,output,maxOutput;//输出、输出限幅
-	  lpf2pData dFilter;  //< filter for D term
-	  lpf2pData eFilter;  //< filter for error term
-
+		BWLowPass *E_filter;
+		BWLowPass *D_filter;
 }PID_Struct;
 //串级PID的结构体，包含两个单级PID
 typedef struct

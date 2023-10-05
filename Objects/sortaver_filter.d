@@ -29,5 +29,6 @@
 .\objects\sortaver_filter.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\sortaver_filter.o: .\Libaray\misc.h
 .\objects\sortaver_filter.o: .\User\Struct.h
+.\objects\sortaver_filter.o: .\Math\filter.h
 .\objects\sortaver_filter.o: Math\SortAver_Filter.h
 .\objects\sortaver_filter.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

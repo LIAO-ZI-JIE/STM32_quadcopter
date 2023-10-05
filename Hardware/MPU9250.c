@@ -173,7 +173,7 @@ void MPU9250_Init(void)
 	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_1, 0x01);		//選擇x軸陀螺儀時鐘
 	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_2, 0x00);//設置六軸全輸出
 	MPU9250_WriteReg(MPU9250_RA_INT_ENABLE, 0x00);//禁止中斷
-	MPU9250_WriteReg(CONFIG, 0x03);      //輸出頻率1000hz濾波參數92  53
+//	MPU9250_WriteReg(CONFIG, 0x03);      //輸出頻率1000hz濾波參數92  53
 	MPU9250_WriteReg(SMPLRT_DIV, 0x00);  //輸出頻率不分頻(1kHz) 
 	MPU9250_WriteReg(GYRO_CONFIG, 0x08); //500deg/s
 	//	MPU9250_WriteReg(ACCEL_CONFIG_2, 0x04);//濾波20    用軟件濾波

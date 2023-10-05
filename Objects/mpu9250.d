@@ -32,6 +32,7 @@
 .\objects\mpu9250.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\mpu9250.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\Math.h
 .\objects\mpu9250.o: .\User\Struct.h
+.\objects\mpu9250.o: .\Math\filter.h
 .\objects\mpu9250.o: .\Math\Matrix.h
 .\objects\mpu9250.o: .\System\Delay.h
 .\objects\mpu9250.o: Hardware\LED.h

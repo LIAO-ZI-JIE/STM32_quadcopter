@@ -208,10 +208,10 @@ void ANO_DT_Data_Exchange(void)
 		f.send_senser = 0;
 		ANO_DT_Send_Status(Attitude_Structure.Roll,Attitude_Structure.Pitch,Attitude_Structure.Yaw,0,0,1);
 
-		ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
-						   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
-						   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
-						   0);
+//		ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
+//						   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
+//						   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
+//						   0);
 //		Data_Send_AngleRate(Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Mag.X,Result_Structure.Mag.Z);
 //		Data_Send_AngleRate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Structure.output,PID_Structure.error,PID_Structure.integral,PID_Structure.P_Out,PID_Structure.D_Out,Offset_Structure.Gyro_Offset_Z);
 //		Data_Send_AngleRate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Roll_Structure.outer.output,PID_Roll_Structure.outer.integral,PID_Roll_Structure.inner.integral,PID_Roll_Structure.inner.output,(float)(Remote_Control_Structure.ROLL-1500)/-12,PID_Roll_Structure.outer.error);

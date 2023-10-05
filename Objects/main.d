@@ -33,6 +33,7 @@
 .\objects\main.o: .\System\Delay.h
 .\objects\main.o: .\Hardware\IC.h
 .\objects\main.o: User\Struct.h
+.\objects\main.o: .\Math\filter.h
 .\objects\main.o: .\Hardware\MPU9250.h
 .\objects\main.o: .\Hardware\MPU9250_Reg.h
 .\objects\main.o: .\Hardware\Serial.h
@@ -42,5 +43,4 @@
 .\objects\main.o: .\Hardware\LED.h
 .\objects\main.o: User\MahonyAHRS.h
 .\objects\main.o: User\PID.h
-.\objects\main.o: .\Math\filter.h
 .\objects\main.o: .\Math\SortAver_Filter.h

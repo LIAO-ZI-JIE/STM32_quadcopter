@@ -28,8 +28,9 @@
 .\objects\filter.o: .\Libaray\stm32f10x_usart.h
 .\objects\filter.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\filter.o: .\Libaray\misc.h
-.\objects\filter.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\filter.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-.\objects\filter.o: .\User\Struct.h
-.\objects\filter.o: Math\physicalConstants.h
+.\objects\filter.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\filter.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\filter.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\filter.o: Math\filter.h
+.\objects\filter.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h

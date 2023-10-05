@@ -29,3 +29,4 @@
 .\objects\pwm.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\pwm.o: .\Libaray\misc.h
 .\objects\pwm.o: .\User\Struct.h
+.\objects\pwm.o: .\Math\filter.h

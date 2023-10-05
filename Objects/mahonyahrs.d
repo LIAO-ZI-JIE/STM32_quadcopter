@@ -29,5 +29,6 @@
 .\objects\mahonyahrs.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\mahonyahrs.o: .\Libaray\misc.h
 .\objects\mahonyahrs.o: User\Struct.h
+.\objects\mahonyahrs.o: .\Math\filter.h
 .\objects\mahonyahrs.o: User\MahonyAHRS.h
 .\objects\mahonyahrs.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

@@ -1,185 +1,159 @@
-/**
- *    ||          ____  _ __
- * +------+      / __ )(_) /_______________ _____  ___
- * | 0xBC |     / __  / / __/ ___/ ___/ __ `/_  / / _ \
- * +------+    / /_/ / / /_/ /__/ /  / /_/ / / /_/  __/
- *  ||  ||    /_____/_/\__/\___/_/   \__,_/ /___/\___/
+/*
+ * filter.h
  *
- * Crazyflie control firmware
- *
- * Copyright (C) 2011-2012 Bitcraze AB
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, in version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- * filter.h - Filtering functions
+ * Copyright (c) 2018 Disi A
+ * 
+ * Author: Disi A
+ * Email: adis@live.cn
+ *  https://www.mathworks.com/matlabcentral/profile/authors/3734620-disi-a
  */
-#ifndef FILTER_H_
-#define FILTER_H_
-#include <stdint.h>
-#include "math.h"
+#ifndef filter_h
+#define filter_h
 
-#define IIR_SHIFT         8
+//#if __cplusplus
+//extern "C"{
+//#endif
 
-int16_t iirLPFilterSingle(int32_t in, int32_t attenuation,  int32_t* filt);
+//#define DOUBLE_PRECISION 0
+
+//#if DOUBLE_PRECISION
+//#define FTR_PRECISION double
+//#if defined(_WIN32) || defined(__ZEPHYR__)
+//#define M_PI 3.141592653589793238462643383279502884197163993751
+//#endif
+//#else
+#define FTR_PRECISION float
+//#if defined(_WIN32) || defined(__ZEPHYR__)
+#define M_PI 3.1415927f
+//#endif
+//#endif
+
+typedef struct {
+    int n;
+	FTR_PRECISION *A;
+    FTR_PRECISION *d1;
+    FTR_PRECISION *d2;
+    FTR_PRECISION *w0;
+    FTR_PRECISION *w1;
+    FTR_PRECISION *w2;
+} BWLowPass;
+// BWHighPass uses exactly the same struct
+typedef BWLowPass BWHighPass;
+
+typedef struct {
+    int m;
+    FTR_PRECISION ep;
+	FTR_PRECISION *A;
+    FTR_PRECISION *d1;
+    FTR_PRECISION *d2;
+    FTR_PRECISION *w0;
+    FTR_PRECISION *w1;
+    FTR_PRECISION *w2;
+} CHELowPass;
+typedef CHELowPass CHEHighPass;
+
+typedef struct {
+    int n;
+	FTR_PRECISION *A;
+    FTR_PRECISION *d1;
+    FTR_PRECISION *d2;
+    FTR_PRECISION *d3;
+    FTR_PRECISION *d4;
+    FTR_PRECISION *w0;
+    FTR_PRECISION *w1;
+    FTR_PRECISION *w2;
+    FTR_PRECISION *w3;
+    FTR_PRECISION *w4;
+} BWBandPass;
+
+typedef struct {
+    int m;
+    FTR_PRECISION ep;
+	FTR_PRECISION *A;
+    FTR_PRECISION *d1;
+    FTR_PRECISION *d2;
+    FTR_PRECISION *d3;
+    FTR_PRECISION *d4;
+    FTR_PRECISION *w0;
+    FTR_PRECISION *w1;
+    FTR_PRECISION *w2;
+    FTR_PRECISION *w3;
+    FTR_PRECISION *w4;
+} CHEBandPass;
+
+typedef struct {
+    int n;
+    FTR_PRECISION r;
+    FTR_PRECISION s;
+	FTR_PRECISION *A;
+    FTR_PRECISION *d1;
+    FTR_PRECISION *d2;
+    FTR_PRECISION *d3;
+    FTR_PRECISION *d4;
+    FTR_PRECISION *w0;
+    FTR_PRECISION *w1;
+    FTR_PRECISION *w2;
+    FTR_PRECISION *w3;
+    FTR_PRECISION *w4;
+} BWBandStop;
+
+typedef struct {
+    int m;
+    FTR_PRECISION ep;
+    FTR_PRECISION r;
+    FTR_PRECISION s;
+	FTR_PRECISION *A;
+    FTR_PRECISION *d1;
+    FTR_PRECISION *d2;
+    FTR_PRECISION *d3;
+    FTR_PRECISION *d4;
+    FTR_PRECISION *w0;
+    FTR_PRECISION *w1;
+    FTR_PRECISION *w2;
+    FTR_PRECISION *w3;
+    FTR_PRECISION *w4;
+} CHEBandStop;
+
+BWLowPass* create_bw_low_pass_filter(int order, FTR_PRECISION sampling_frequency, FTR_PRECISION half_power_frequency);
+BWHighPass* create_bw_high_pass_filter(int order, FTR_PRECISION sampling_frequency, FTR_PRECISION half_power_frequency);
+BWBandPass* create_bw_band_pass_filter(int order, FTR_PRECISION sampling_frequency, FTR_PRECISION lower_half_power_frequency, FTR_PRECISION upper_half_power_frequency);
+BWBandStop* create_bw_band_stop_filter(int order, FTR_PRECISION sampling_frequency, FTR_PRECISION lower_half_power_frequency, FTR_PRECISION upper_half_power_frequency);
+
+CHELowPass* create_che_low_pass_filter(int order, FTR_PRECISION epsilon, FTR_PRECISION sampling_frequency, FTR_PRECISION half_power_frequency);
+CHEHighPass* create_che_high_pass_filter(int order, FTR_PRECISION epsilon, FTR_PRECISION sampling_frequency, FTR_PRECISION half_power_frequency);
+CHEBandPass* create_che_band_pass_filter(int order, FTR_PRECISION epsilon, FTR_PRECISION sampling_frequency, FTR_PRECISION lower_half_power_frequency, FTR_PRECISION upper_half_power_frequency);
+CHEBandStop* create_che_band_stop_filter(int order, FTR_PRECISION epsilon, FTR_PRECISION sampling_frequency, FTR_PRECISION lower_half_power_frequency, FTR_PRECISION upper_half_power_frequency);
 
 
+void free_bw_low_pass(BWLowPass* filter);
+void free_bw_high_pass(BWHighPass* filter);
+void free_bw_band_pass(BWBandPass* filter);
+void free_bw_band_stop(BWBandStop* filter);
 
-void lpf2pInit(lpf2pData* lpfData, float sample_freq, float cutoff_freq);
-void lpf2pSetCutoffFreq(lpf2pData* lpfData, float sample_freq, float cutoff_freq);
-float lpf2pApply(lpf2pData* lpfData, float sample);
-float lpf2pReset(lpf2pData* lpfData, float sample);
+void free_che_low_pass(CHELowPass* filter);
+void free_che_high_pass(CHEHighPass* filter);
+void free_che_band_pass(CHEBandPass* filter);
+void free_che_band_stop(CHEBandStop* filter);
 
-/** Second order low pass filter structure.
- *
- * using biquad filter with bilinear z transform
- *
- * http://en.wikipedia.org/wiki/Digital_biquad_filter
- * http://www.earlevel.com/main/2003/03/02/the-bilinear-z-transform
- *
- * Laplace continious form:
- *
- *                 1
- * H(s) = -------------------
- *        s^2/w^2 + s/w*Q + 1
- *
- *
- * Polynomial discrete form:
- *
- *        b0 + b1 z^-1 + b2 z^-2
- * H(z) = ----------------------
- *        a0 + a1 z^-1 + a2 z^-2
- *
- * with:
- *  a0 = 1
- *  a1 = 2*(K^2 - 1) / (K^2 + K/Q + 1)
- *  a2 = (K^2 - K/Q + 1) / (K^2 + K/Q + 1)
- *  b0 = K^2 / (K^2 + K/Q + 1)
- *  b1 = 2*b0
- *  b2 = b0
- *  K = tan(pi*Fc/Fs) ~ pi*Fc/Fs = Ts/(2*tau)
- *  Fc: cutting frequency
- *  Fs: sampling frequency
- *  Ts: sampling period
- *  tau: time constant (tau = 1/(2*pi*Fc))
- *  Q: gain at cutoff frequency
- *
- * Note that b[0]=b[2], so we don't need to save b[2]
- */
-struct SecondOrderLowPass {
-  float a[2]; ///< denominator gains
-  float b[2]; ///< numerator gains
-  float i[2]; ///< input history
-  float o[2]; ///< output history
-};
 
-/** Init second order low pass filter.
- *
- * @param filter second order low pass filter structure
- * @param tau time constant of the second order low pass filter
- * @param Q Q value of the second order low pass filter
- * @param sample_time sampling period of the signal
- * @param value initial value of the filter
- */
-static inline void init_second_order_low_pass(struct SecondOrderLowPass *filter, float tau, float Q, float sample_time,
-    float value)
-{
-  float K = tanf(sample_time / (2.0f * tau));
-  float poly = K * K + K / Q + 1.0f;
-  filter->a[0] = 2.0f * (K * K - 1.0f) / poly;
-  filter->a[1] = (K * K - K / Q + 1.0f) / poly;
-  filter->b[0] = K * K / poly;
-  filter->b[1] = 2.0f * filter->b[0];
-  filter->i[0] = filter->i[1] = filter->o[0] = filter->o[1] = value;
-}
+FTR_PRECISION bw_low_pass(BWLowPass* filter, FTR_PRECISION input);
+FTR_PRECISION bw_high_pass(BWHighPass* filter, FTR_PRECISION input);
+FTR_PRECISION bw_band_pass(BWBandPass* filter, FTR_PRECISION input);
+FTR_PRECISION bw_band_stop(BWBandStop* filter, FTR_PRECISION input);
 
-/** Update second order low pass filter state with a new value.
- *
- * @param filter second order low pass filter structure
- * @param value new input value of the filter
- * @return new filtered value
- */
-static inline float update_second_order_low_pass(struct SecondOrderLowPass *filter, float value)
-{
-  float out = filter->b[0] * value
-              + filter->b[1] * filter->i[0]
-              + filter->b[0] * filter->i[1]
-              - filter->a[0] * filter->o[0]
-              - filter->a[1] * filter->o[1];
-  filter->i[1] = filter->i[0];
-  filter->i[0] = value;
-  filter->o[1] = filter->o[0];
-  filter->o[0] = out;
-  return out;
-}
+FTR_PRECISION che_low_pass(CHELowPass* filter, FTR_PRECISION input);
+FTR_PRECISION che_high_pass(CHEHighPass* filter, FTR_PRECISION input);
+FTR_PRECISION che_band_pass(CHEBandPass* filter, FTR_PRECISION input);
+FTR_PRECISION che_band_stop(CHEBandStop* filter, FTR_PRECISION input);
 
-/** Get current value of the second order low pass filter.
- *
- * @param filter second order low pass filter structure
- * @return current value of the filter
- */
-static inline float get_second_order_low_pass(struct SecondOrderLowPass *filter)
-{
-  return filter->o[0];
-}
+FTR_PRECISION softmax(FTR_PRECISION* data, int size, int target_ind);
 
-struct SecondOrderLowPass_int {
-  int32_t a[2]; ///< denominator gains
-  int32_t b[2]; ///< numerator gains
-  int32_t i[2]; ///< input history
-  int32_t o[2]; ///< output history
-  int32_t loop_gain; ///< loop gain
-};
+// Output should be pre-allocated which has the same(or larger) size as the input.
+void spike_filter_upward(FTR_PRECISION * input, int size, FTR_PRECISION * output, FTR_PRECISION strength);
 
-/** Second order Butterworth low pass filter.
- */
-typedef struct SecondOrderLowPass Butterworth2LowPass;
+//#if __cplusplus
+//}
+//#endif
 
-/** Init a second order Butterworth filter.
- *
- * based on the generic second order filter
- * with Q = 0.7071 = 1/sqrt(2)
- *
- * http://en.wikipedia.org/wiki/Butterworth_filter
- *
- * @param filter second order Butterworth low pass filter structure
- * @param tau time constant of the second order low pass filter
- * @param sample_time sampling period of the signal
- * @param value initial value of the filter
- */
-static inline void init_butterworth_2_low_pass(Butterworth2LowPass *filter, float tau, float sample_time, float value)
-{
-  init_second_order_low_pass((struct SecondOrderLowPass *)filter, tau, 0.7071, sample_time, value);
-}
+#endif /* filter_h */
 
-/** Update second order Butterworth low pass filter state with a new value.
- *
- * @param filter second order Butterworth low pass filter structure
- * @param value new input value of the filter
- * @return new filtered value
- */
-static inline float update_butterworth_2_low_pass(Butterworth2LowPass *filter, float value)
-{
-  return update_second_order_low_pass((struct SecondOrderLowPass *)filter, value);
-}
-
-/** Get current value of the second order Butterworth low pass filter.
- *
- * @param filter second order Butterworth low pass filter structure
- * @return current value of the filter
- */
-static inline float get_butterworth_2_low_pass(Butterworth2LowPass *filter)
-{
-  return filter->o[0];
-}
-
-#endif //FILTER_H_
