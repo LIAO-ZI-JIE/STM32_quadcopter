@@ -211,34 +211,33 @@ uint8_t AK8963_GetID(void)
 }
 
 
-void MPU9250_GetData(int16_t *AccX, int16_t *AccY, int16_t *AccZ, 
-						int16_t *GyroX, int16_t *GyroY, int16_t *GyroZ)
+void MPU9250_GetData(IMU_Struct* IMU_Structure)
 {
 	uint8_t DataH, DataL;
 	
 	DataH = MPU9250_ReadReg(ACCEL_XOUT_H);
 	DataL = MPU9250_ReadReg(ACCEL_XOUT_L);
-	*AccX = (DataH << 8) | DataL;
+	IMU_Structure->AccX = (DataH << 8) | DataL;
 	
 	DataH = MPU9250_ReadReg(ACCEL_YOUT_H);
 	DataL = MPU9250_ReadReg(ACCEL_YOUT_L);
-	*AccY = (DataH << 8) | DataL;
+	IMU_Structure->AccY = (DataH << 8) | DataL;
 	
 	DataH = MPU9250_ReadReg(ACCEL_ZOUT_H);
 	DataL = MPU9250_ReadReg(ACCEL_ZOUT_L);
-	*AccZ = (DataH << 8) | DataL;
+	IMU_Structure->AccZ = (DataH << 8) | DataL;
 	
 	DataH = MPU9250_ReadReg(GYRO_XOUT_H);
 	DataL = MPU9250_ReadReg(GYRO_XOUT_L);
-	*GyroX = (DataH << 8) | DataL;
+	IMU_Structure->GyroX = (DataH << 8) | DataL;
 	
 	DataH = MPU9250_ReadReg(GYRO_YOUT_H);
 	DataL = MPU9250_ReadReg(GYRO_YOUT_L);
-	*GyroY = (DataH << 8) | DataL;
+	IMU_Structure->GyroY = (DataH << 8) | DataL;
 	
 	DataH = MPU9250_ReadReg(GYRO_ZOUT_H);
 	DataL = MPU9250_ReadReg(GYRO_ZOUT_L);
-	*GyroZ = (DataH << 8) | DataL;
+	IMU_Structure->GyroZ= (DataH << 8) | DataL;
 }
 
 

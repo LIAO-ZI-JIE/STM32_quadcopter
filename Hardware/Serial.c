@@ -215,8 +215,8 @@ void ANO_DT_Data_Exchange(void)
 //		Data_Send_AngleRate(Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Mag.X,Result_Structure.Mag.Z);
 //		Data_Send_AngleRate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Structure.output,PID_Structure.error,PID_Structure.integral,PID_Structure.P_Out,PID_Structure.D_Out,Offset_Structure.Gyro_Offset_Z);
 //		Data_Send_AngleRate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Roll_Structure.outer.output,PID_Roll_Structure.outer.integral,PID_Roll_Structure.inner.integral,PID_Roll_Structure.inner.output,(float)(Remote_Control_Structure.ROLL-1500)/-12,PID_Roll_Structure.outer.error);
-		Data_Send_AngleRate(PID_Roll_Structure.outer.error,PID_Roll_Structure.outer.P_Out,PID_Roll_Structure.outer.integral,PID_Roll_Structure.outer.D_Out,PID_Roll_Structure.inner.error,PID_Roll_Structure.inner.P_Out,PID_Roll_Structure.inner.integral,PID_Roll_Structure.inner.D_Out);
-        Data_Send_Angle2Rate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Roll_Structure.outer.output,PID_Roll_Structure.output,1,1,1,1);
+//		Data_Send_AngleRate(PID_Roll_Structure.outer.error,PID_Roll_Structure.outer.P_Out,PID_Roll_Structure.outer.integral,PID_Roll_Structure.outer.D_Out,PID_Roll_Structure.inner.error,PID_Roll_Structure.inner.P_Out,PID_Roll_Structure.inner.integral,PID_Roll_Structure.inner.D_Out);
+     Data_Send_Angle2Rate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Roll_Structure.outer.output,PID_Roll_Structure.output,1,1,1,1);
 		#if defined (ROL_PID_DEBUG)   //ROLL角调试
 			Data_Send_AngleRate(Gyr_rad.X*RadtoDeg,PID_ROL_Rate.Pout,PID_ROL_Rate.Iout,PID_ROL_Rate.Dout,
 		                       PID_ROL_Angle.Error,PID_ROL_Angle.Pout,PID_ROL_Angle.Iout,PID_ROL_Angle.Dout);

@@ -25,7 +25,12 @@ int16_t unfiltergyrox;
 int main(void)
 {
 	
-	BWLowPass *Gyrox_filter=create_bw_low_pass_filter(4,100,30);
+	BWLowPass *Gyrox_filter=create_bw_low_pass_filter(4,200,20);
+	BWLowPass *Gyroy_filter=create_bw_low_pass_filter(4,200,20);
+	BWLowPass *Gyroz_filter=create_bw_low_pass_filter(4,200,20);
+	BWLowPass *Accx_filter=create_bw_low_pass_filter(2,200,20);
+	BWLowPass *Accy_filter=create_bw_low_pass_filter(2,200,20);
+	BWLowPass *Accz_filter=create_bw_low_pass_filter(2,200,20);
 	PWM_Init();
 	OLED_Init();
 	IC_Init();
@@ -55,6 +60,15 @@ int main(void)
 			READ_MPU9250_MAG(&IMU_Structure);
 			unfiltergyrox=IMU_Structure.GyroX;
 			IMU_Structure.GyroX=bw_low_pass(Gyrox_filter,IMU_Structure.GyroX);
+			IMU_Structure.GyroY=bw_low_pass(Gyroy_filter,IMU_Structure.GyroY);
+			IMU_Structure.GyroZ=bw_low_pass(Gyroz_filter,IMU_Structure.GyroZ);
+			
+			IMU_Structure.AccX=bw_low_pass(Accx_filter,IMU_Structure.AccX);
+			IMU_Structure.AccY=bw_low_pass(Accy_filter,IMU_Structure.AccY);
+			IMU_Structure.AccZ=bw_low_pass(Accz_filter,IMU_Structure.AccZ);
+						
+			
+			
 //			SortAver_FilterXYZ(&IMU_Structure,&Filter_Acc,15);
 			MPU9250_Calibrate();
 			Get_Remote_Control();
@@ -103,6 +117,7 @@ int main(void)
 				PID_Roll_Structure.inner.integral=0;
 				PID_Roll_Structure.outer.integral=0;
 			}
+		Data_Send_AngleRate(PID_Roll_Structure.outer.error,PID_Roll_Structure.outer.P_Out,PID_Roll_Structure.outer.integral,PID_Roll_Structure.outer.D_Out,PID_Roll_Structure.inner.error,PID_Roll_Structure.inner.P_Out,PID_Roll_Structure.inner.integral,PID_Roll_Structure.inner.D_Out);
 
 			Motor_Output();
 			imu_Flag=0;
@@ -162,7 +177,7 @@ void TIM3_IRQHandler(void)
 	{
 		imu_time++;
 		serial_time++;
-		if(imu_time>=10)
+		if(imu_time>=5)
 		{
 			imu_Flag=1;
 
