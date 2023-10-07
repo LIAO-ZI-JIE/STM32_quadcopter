@@ -1,7 +1,7 @@
-.\objects\my_i2c.o: Hardware\My_I2C.c
+.\objects\my_i2c.o: Hardware\MY_I2C.c
 .\objects\my_i2c.o: .\Start\stm32f10x.h
 .\objects\my_i2c.o: .\Start\core_cm3.h
-.\objects\my_i2c.o: C:\keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\my_i2c.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\my_i2c.o: .\Start\system_stm32f10x.h
 .\objects\my_i2c.o: .\User\stm32f10x_conf.h
 .\objects\my_i2c.o: .\Libaray\stm32f10x_adc.h
@@ -28,3 +28,4 @@
 .\objects\my_i2c.o: .\Libaray\stm32f10x_usart.h
 .\objects\my_i2c.o: .\Libaray\stm32f10x_wwdg.h
 .\objects\my_i2c.o: .\Libaray\misc.h
+.\objects\my_i2c.o: .\System\Delay.h

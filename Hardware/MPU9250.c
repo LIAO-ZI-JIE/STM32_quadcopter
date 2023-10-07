@@ -9,6 +9,10 @@
 #include "LED.h"
 #include "oled.h"
 #include "Serial.h"
+
+
+#define I2C_MODE
+
 #define MPU9250_ADDRESS		0xD0
 #define Acc_Conversion  0.00119651f  //1/8196*9.80665
 #define Gyro_Conversion 0.00026631f //3.141592653589793/180*0.0152587890625
@@ -33,6 +37,10 @@ Calibrate_Struct Calibrate_Structure_Mag={
 	267.5712,
 	244.7495
 };
+
+
+
+#if defined (I2C_MODE)
 void MPU9250_WaitEvent(I2C_TypeDef* I2Cx, uint32_t I2C_EVENT)
 {
 	uint32_t Timeout;
@@ -143,101 +151,62 @@ uint8_t MPU9250_ReadReg(uint8_t RegAddress)
 	return Data;
 }
 
-void MPU9250_Init(void)
-{
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C2, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-	
-	GPIO_InitTypeDef GPIO_InitStructure;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);
-	
-	I2C_InitTypeDef I2C_InitStructure;
-	I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
-	I2C_InitStructure.I2C_ClockSpeed = 400000;
-	I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_16_9 ;
-	I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
-	I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
-	I2C_InitStructure.I2C_OwnAddress1 = 0x00;
-	I2C_Init(I2C2, &I2C_InitStructure);
-	
-	I2C_Cmd(I2C2, ENABLE);	
-	MPU9250_WriteReg(PWR_MGMT_1, 0x80);	//重設
-	Delay_ms(100);//等待100ms
-
-	/**********************Init SLV0 i2c**********************************/	
-	MPU9250_WriteReg(INT_PIN_CFG ,0x02);// MPU 可直接访问MPU6050辅助I2C
-	///*******************Init GYRO and ACCEL******************************/
-	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_1, 0x01);		//選擇x軸陀螺儀時鐘
-	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_2, 0x00);//設置六軸全輸出
-	MPU9250_WriteReg(MPU9250_RA_INT_ENABLE, 0x00);//禁止中斷
-//	MPU9250_WriteReg(CONFIG, 0x03);      //輸出頻率1000hz濾波參數92  53
-	MPU9250_WriteReg(SMPLRT_DIV, 0x00);  //輸出頻率不分頻(1kHz) 
-	MPU9250_WriteReg(GYRO_CONFIG, 0x08); //500deg/s
-	//	MPU9250_WriteReg(ACCEL_CONFIG_2, 0x04);//濾波20    用軟件濾波
-	MPU9250_WriteReg(ACCEL_CONFIG, 0x08);//0x00/+-2g. 0x08/+-4g. 0x10/+-8g. 0x18(????16G)
-	
-  /**********************Init MAG **********************************/
-	AK8963_WriteReg(AK8963_CNTL2_REG,AK8963_CNTL2_SRST); // Reset AK8963
-	Delay_ms(50);
-	AK8963_WriteReg(AK8963_CNTL1_REG,0x0F);//切換至讀取模式
-	Delay_ms(50);
-
-	x_axis=AK8963_ReadReg(AK8963_ASAX);
-	x_axis=((((float)x_axis-128)/256)+1);
-	y_axis=AK8963_ReadReg(AK8963_ASAY);
-	y_axis=((((float)y_axis-128)/256)+1);
-	z_axis=AK8963_ReadReg(AK8963_ASAZ);
-	z_axis=((((float)z_axis-128)/256)+1);
-	AK8963_WriteReg(AK8963_CNTL1_REG,0x00);
-	Delay_ms(50);
-	AK8963_WriteReg(AK8963_CNTL1_REG,0x16); // 工作於Continuous measurement mode2 & 16-bit output	
-  Delay_ms(50);
-
-}
-
-
-
-uint8_t MPU9250_GetID(void)
-{
-	return MPU9250_ReadReg(WHO_AM_I);
-}
-
-uint8_t AK8963_GetID(void)
-{
-	return AK8963_ReadReg(AK8963_WHOAMI_REG);
-}
-
-
+//void MPU9250_GetData(IMU_Struct* IMU_Structure)
+//{
+//	uint8_t DataH, DataL;
+//	
+//	DataH = MPU9250_ReadReg(ACCEL_XOUT_H);
+//	DataL = MPU9250_ReadReg(ACCEL_XOUT_L);
+//	IMU_Structure->AccX = (DataH << 8) | DataL;
+//	
+//	DataH = MPU9250_ReadReg(ACCEL_YOUT_H);
+//	DataL = MPU9250_ReadReg(ACCEL_YOUT_L);
+//	IMU_Structure->AccY = (DataH << 8) | DataL;
+//	
+//	DataH = MPU9250_ReadReg(ACCEL_ZOUT_H);
+//	DataL = MPU9250_ReadReg(ACCEL_ZOUT_L);
+//	IMU_Structure->AccZ = (DataH << 8) | DataL;
+//	
+//	DataH = MPU9250_ReadReg(GYRO_XOUT_H);
+//	DataL = MPU9250_ReadReg(GYRO_XOUT_L);
+//	IMU_Structure->GyroX = (DataH << 8) | DataL;
+//	
+//	DataH = MPU9250_ReadReg(GYRO_YOUT_H);
+//	DataL = MPU9250_ReadReg(GYRO_YOUT_L);
+//	IMU_Structure->GyroY = (DataH << 8) | DataL;
+//	
+//	DataH = MPU9250_ReadReg(GYRO_ZOUT_H);
+//	DataL = MPU9250_ReadReg(GYRO_ZOUT_L);
+//	IMU_Structure->GyroZ= (DataH << 8) | DataL;
+//}
 void MPU9250_GetData(IMU_Struct* IMU_Structure)
-{
-	uint8_t DataH, DataL;
+{ 
+ 	 uint16_t BUF[12];
+   BUF[0]=MPU9250_ReadReg(GYRO_XOUT_L); 
+   BUF[1]=MPU9250_ReadReg(GYRO_XOUT_H);
+   IMU_Structure->GyroX=	(BUF[1]<<8)|BUF[0];
+
+   BUF[2]=MPU9250_ReadReg(GYRO_YOUT_L);
+   BUF[3]=MPU9250_ReadReg(GYRO_YOUT_H);
+   IMU_Structure->GyroY=	(BUF[3]<<8)|BUF[2];
+
+   BUF[4]=MPU9250_ReadReg(GYRO_ZOUT_L);
+   BUF[5]=MPU9250_ReadReg(GYRO_ZOUT_H);
+   IMU_Structure->GyroZ=	(BUF[5]<<8)|BUF[4];
+
 	
-	DataH = MPU9250_ReadReg(ACCEL_XOUT_H);
-	DataL = MPU9250_ReadReg(ACCEL_XOUT_L);
-	IMU_Structure->AccX = (DataH << 8) | DataL;
-	
-	DataH = MPU9250_ReadReg(ACCEL_YOUT_H);
-	DataL = MPU9250_ReadReg(ACCEL_YOUT_L);
-	IMU_Structure->AccY = (DataH << 8) | DataL;
-	
-	DataH = MPU9250_ReadReg(ACCEL_ZOUT_H);
-	DataL = MPU9250_ReadReg(ACCEL_ZOUT_L);
-	IMU_Structure->AccZ = (DataH << 8) | DataL;
-	
-	DataH = MPU9250_ReadReg(GYRO_XOUT_H);
-	DataL = MPU9250_ReadReg(GYRO_XOUT_L);
-	IMU_Structure->GyroX = (DataH << 8) | DataL;
-	
-	DataH = MPU9250_ReadReg(GYRO_YOUT_H);
-	DataL = MPU9250_ReadReg(GYRO_YOUT_L);
-	IMU_Structure->GyroY = (DataH << 8) | DataL;
-	
-	DataH = MPU9250_ReadReg(GYRO_ZOUT_H);
-	DataL = MPU9250_ReadReg(GYRO_ZOUT_L);
-	IMU_Structure->GyroZ= (DataH << 8) | DataL;
+	 BUF[6]=MPU9250_ReadReg(ACCEL_XOUT_L); 
+   BUF[7]=MPU9250_ReadReg(ACCEL_XOUT_H);
+   IMU_Structure->AccX=	(BUF[7]<<8)|BUF[6];
+
+   BUF[8]=MPU9250_ReadReg(ACCEL_YOUT_L);
+   BUF[9]=MPU9250_ReadReg(ACCEL_YOUT_H);
+   IMU_Structure->AccY=	(BUF[9]<<8)|BUF[8];
+
+   BUF[10]=MPU9250_ReadReg(ACCEL_ZOUT_L); 
+   BUF[11]=MPU9250_ReadReg(ACCEL_ZOUT_H);
+   IMU_Structure->AccZ=  (BUF[11]<<8)|BUF[10];
+
 }
 
 
@@ -363,6 +332,97 @@ void READ_MPU9250_MAG(IMU_Struct *IMU_Structure)
 		}
 	}
 }
+#endif
+
+#if defined (I2C_SOFT_MODE)
+MPU9250_WriteReg
+
+#endif
+
+#if defined (SPI_MODE)
+
+
+
+
+#endif
+
+void MPU9250_Init(void)
+{
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+
+#if defined (I2C_MODE) 
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C2, ENABLE);	
+	I2C_InitTypeDef I2C_InitStructure;
+	I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
+	I2C_InitStructure.I2C_ClockSpeed = 400000;
+	I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_16_9 ;
+	I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
+	I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+	I2C_InitStructure.I2C_OwnAddress1 = 0x00;
+	I2C_Init(I2C2, &I2C_InitStructure);
+	
+	I2C_Cmd(I2C2, ENABLE);	
+#endif
+	MPU9250_WriteReg(PWR_MGMT_1, 0x80);	//重設
+	Delay_ms(100);//等待100ms
+
+	/**********************Init SLV0 i2c**********************************/	
+	
+	
+	#if defined (I2C_MODE)
+	MPU9250_WriteReg(INT_PIN_CFG ,0x02);// MPU 可直接访问MPU6050辅助I2C
+	#elif defined (SPI_MODE)
+	MPU9250_WriteReg(INT_PIN_CFG ,0x02);
+	#endif
+	
+	///*******************Init GYRO and ACCEL******************************/
+	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_1, 0x01);		//選擇x軸陀螺儀時鐘
+	MPU9250_WriteReg(MPU9250_RA_PWR_MGMT_2, 0x00);//設置六軸全輸出
+	MPU9250_WriteReg(MPU9250_RA_INT_ENABLE, 0x00);//禁止中斷
+//	MPU9250_WriteReg(CONFIG, 0x03);      //輸出頻率1000hz濾波參數92  53
+	MPU9250_WriteReg(SMPLRT_DIV, 0x00);  //輸出頻率不分頻(1kHz) 
+	MPU9250_WriteReg(GYRO_CONFIG, 0x08); //500deg/s
+	//	MPU9250_WriteReg(ACCEL_CONFIG_2, 0x04);//濾波20    用軟件濾波
+	MPU9250_WriteReg(ACCEL_CONFIG, 0x08);//0x00/+-2g. 0x08/+-4g. 0x10/+-8g. 0x18(????16G)
+	
+  /**********************Init MAG **********************************/
+	AK8963_WriteReg(AK8963_CNTL2_REG,AK8963_CNTL2_SRST); // Reset AK8963
+	Delay_ms(50);
+	AK8963_WriteReg(AK8963_CNTL1_REG,0x0F);//切換至讀取模式
+	Delay_ms(50);
+
+	x_axis=AK8963_ReadReg(AK8963_ASAX);
+	x_axis=((((float)x_axis-128)/256)+1);
+	y_axis=AK8963_ReadReg(AK8963_ASAY);
+	y_axis=((((float)y_axis-128)/256)+1);
+	z_axis=AK8963_ReadReg(AK8963_ASAZ);
+	z_axis=((((float)z_axis-128)/256)+1);
+	AK8963_WriteReg(AK8963_CNTL1_REG,0x00);
+	Delay_ms(50);
+	AK8963_WriteReg(AK8963_CNTL1_REG,0x16); // 工作於Continuous measurement mode2 & 16-bit output	
+  Delay_ms(50);
+
+}
+
+
+
+uint8_t MPU9250_GetID(void)
+{
+	return MPU9250_ReadReg(WHO_AM_I);
+}
+
+uint8_t AK8963_GetID(void)
+{
+	return AK8963_ReadReg(AK8963_WHOAMI_REG);
+}
+
 
 void MPU9250_Calibrate_Calculate(Calibrate_Struct* Calibrate_Structure,float input[6][3])
 {

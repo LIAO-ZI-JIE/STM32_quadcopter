@@ -38,6 +38,7 @@
 ".\objects\pwm.o"
 ".\objects\mpu9250.o"
 ".\objects\led.o"
+".\objects\my_i2c.o"
 ".\objects\matrix.o"
 ".\objects\filter.o"
 ".\objects\sortaver_filter.o"

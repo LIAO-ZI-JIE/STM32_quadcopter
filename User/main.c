@@ -18,19 +18,32 @@
 uint8_t ID;
 uint8_t imu_Flag,serial_flag;
 int16_t AX, AY, AZ, GX, GY, GZ;
+int32_t nowtime,lasttime,sum,peial;
 float a12,a22,a31,a32,a33;
 float feedbackValue;
 int16_t unfiltergyrox;
 
+	BWLowPass *Gyrox_filter;
+	BWLowPass *Gyroy_filter;
+	BWLowPass *Gyroz_filter;
+	BWLowPass *Accx_filter; 
+	BWLowPass *Accy_filter; 
+	BWLowPass *Accz_filter; 
+
+
+
+
+
+
 int main(void)
 {
 	
-	BWLowPass *Gyrox_filter=create_bw_low_pass_filter(4,200,20);
-	BWLowPass *Gyroy_filter=create_bw_low_pass_filter(4,200,20);
-	BWLowPass *Gyroz_filter=create_bw_low_pass_filter(4,200,20);
-	BWLowPass *Accx_filter=create_bw_low_pass_filter(2,200,20);
-	BWLowPass *Accy_filter=create_bw_low_pass_filter(2,200,20);
-	BWLowPass *Accz_filter=create_bw_low_pass_filter(2,200,20);
+	Gyrox_filter=create_bw_low_pass_filter(4,200,20);
+	Gyroy_filter=create_bw_low_pass_filter(4,200,20);
+	Gyroz_filter=create_bw_low_pass_filter(4,200,20);
+	Accx_filter =create_bw_low_pass_filter(2,200,20);
+	Accy_filter =create_bw_low_pass_filter(2,200,20);
+	Accz_filter =create_bw_low_pass_filter(2,200,20);
 	PWM_Init();
 	OLED_Init();
 	IC_Init();
@@ -49,14 +62,45 @@ int main(void)
 		
 
 
+
 		
-		ID=AK8963_GetID();
-		
-		if(imu_Flag==1)
-		{	
-			ID=AK8963_GetID();
-			MPU9250_GetData_continuous(&IMU_Structure);
-			Delay_us(10);
+//		if(imu_Flag==1)
+//		{	
+
+
+//			imu_Flag=0;
+//		}
+		if(serial_flag==1)
+		{
+			
+
+			
+//			ANO_DT_Data_Exchange();
+      Data_Send_Angle2Rate(Result_Structure.Gyro.X*RadtoDeg,Attitude_Structure.Roll,PID_Roll_Structure.outer.output,PID_Roll_Structure.output,peial,sum,1,1);
+			ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
+							   IMU_Structure.GyroX,unfiltergyrox,IMU_Structure.GyroZ,
+							   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
+							   0);
+
+			serial_flag=0;
+		}
+
+	}
+
+
+}
+
+void TIM3_IRQHandler(void)
+{
+	static int16_t serial_time, imu_time;
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) == SET)
+	{
+		imu_time++;
+		serial_time++;
+		if(imu_time>=5)
+		{
+
+			MPU9250_GetData(&IMU_Structure);
 			READ_MPU9250_MAG(&IMU_Structure);
 			unfiltergyrox=IMU_Structure.GyroX;
 			IMU_Structure.GyroX=bw_low_pass(Gyrox_filter,IMU_Structure.GyroX);
@@ -69,14 +113,10 @@ int main(void)
 						
 			
 			
-//			SortAver_FilterXYZ(&IMU_Structure,&Filter_Acc,15);
 			MPU9250_Calibrate();
 			Get_Remote_Control();
 
-			ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
-							   IMU_Structure.GyroX,unfiltergyrox,IMU_Structure.GyroZ,
-							   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
-							   0);
+
 	
 			MahonyAHRSupdate(Result_Structure.Gyro.X,-Result_Structure.Gyro.Y,-Result_Structure.Gyro.Z,-Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,Result_Structure.Mag.Y,-Result_Structure.Mag.X,Result_Structure.Mag.Z);
 //			MahonyAHRSupdate(Result_Structure.Gyro.X,Result_Structure.Gyro.Y,Result_Structure.Gyro.Z,Result_Structure.Acc.X,Result_Structure.Acc.Y,Result_Structure.Acc.Z,0,0,0);
@@ -117,79 +157,22 @@ int main(void)
 				PID_Roll_Structure.inner.integral=0;
 				PID_Roll_Structure.outer.integral=0;
 			}
-		Data_Send_AngleRate(PID_Roll_Structure.outer.error,PID_Roll_Structure.outer.P_Out,PID_Roll_Structure.outer.integral,PID_Roll_Structure.outer.D_Out,PID_Roll_Structure.inner.error,PID_Roll_Structure.inner.P_Out,PID_Roll_Structure.inner.integral,PID_Roll_Structure.inner.D_Out);
 
 			Motor_Output();
-			imu_Flag=0;
-		}
-		if(serial_flag==1)
-		{
-			ANO_DT_Data_Exchange();
 
-			serial_flag=0;
-		}
-
-//		Motor_Output();
-//		ANO_DT_Send_Senser(IMU_Structure.AccX,IMU_Structure.AccY,IMU_Structure.AccZ,
-//						   IMU_Structure.GyroX,IMU_Structure.GyroY,IMU_Structure.GyroZ,
-//						   IMU_Structure.MagX,IMU_Structure.MagY,IMU_Structure.MagZ,
-//						   0);
-		
-//		ID=MPU9250_GetID();
-//		READ_MPU9250_MAG();
-//		ID=AK8963_ReadReg(0x00);
-//		AY++;
-//		MPU9250_GetData(&AX, &AY, &AZ, &GX, &GY, &GZ);
-		
-//		OLED_ShowHexNum(1, 1, ID,2);
-				
-//		OLED_ShowSignedNum(2, 1, IMU_Structure.GyroX ,5);
-//		OLED_ShowSignedNum(3, 1, IMU_Structure.GyroY, 5);
-//		OLED_ShowSignedNum(4, 1, IMU_Structure.GyroZ, 5);	
-//		OLED_ShowSignedNum(2, 8, IMU_Structure.AccX, 5);
-//		OLED_ShowSignedNum(3, 8, IMU_Structure.AccY, 5);
-//		OLED_ShowSignedNum(4, 8, IMU_Structure.AccZ, 5);
-				
-//		OLED_ShowSignedNum(2, 1, Remote_Control_Structure.THROTTLE ,5);
-//		OLED_ShowSignedNum(3, 1, Remote_Control_Structure.YAW, 5);
-//		OLED_ShowSignedNum(4, 1, Remote_Control_Structure.PITCH, 5);	
-//		OLED_ShowSignedNum(2, 8, Remote_Control_Structure.ROLL, 5);
-//		OLED_ShowSignedNum(3, 8, IMU_Structure.AccY, 5);
-//		OLED_ShowSignedNum(4, 8, IMU_Structure.AccZ, 5);
-//		OLED_ShowSignedNum(1, 1, Attitude_Structure.Pitch, 4);
-//		OLED_ShowSignedNum(1,6,(int32_t)(Attitude_Structure.Pitch*1000)%1000,4);
-//		OLED_ShowSignedNum(2, 1, Attitude_Structure.Roll, 5);
-//		OLED_ShowSignedNum(3, 1, Attitude_Structure.Yaw, 5);
-
-//		OLED_ShowSignedNum(2, 8, Calibrate_Structure_Acc.Rx, 5);
-//		OLED_ShowSignedNum(3, 8, Calibrate_Structure_Acc.Ry, 5);
-//		OLED_ShowSignedNum(4, 8, Calibrate_Structure_Acc.Rz, 5);
-
-	}
-
-
-}
-
-void TIM3_IRQHandler(void)
-{
-	static int16_t serial_time, imu_time;
-	if (TIM_GetITStatus(TIM3, TIM_IT_Update) == SET)
-	{
-		imu_time++;
-		serial_time++;
-		if(imu_time>=5)
-		{
-			imu_Flag=1;
-
+			peial=nowtime-lasttime;
+			lasttime=nowtime;
 			imu_time=0;
 		}
-		if(serial_time>=5)
+		if(serial_time>=10)
 		{
+			ANO_DT_Send_Status(Attitude_Structure.Roll,Attitude_Structure.Pitch,Attitude_Structure.Yaw,0,0,1);
+			Data_Send_AngleRate(PID_Roll_Structure.outer.error,PID_Roll_Structure.outer.P_Out,PID_Roll_Structure.outer.integral,PID_Roll_Structure.outer.D_Out,PID_Roll_Structure.inner.error,PID_Roll_Structure.inner.P_Out,PID_Roll_Structure.inner.integral,PID_Roll_Structure.inner.D_Out);
 
 			serial_flag=1;
 			serial_time=0;
 		}
-		
+		nowtime++;
 		
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 	}

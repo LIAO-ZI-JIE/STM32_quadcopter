@@ -805,6 +805,16 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\LED.h</FilePath>
             </File>
+            <File>
+              <FileName>MY_I2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\MY_I2C.c</FilePath>
+            </File>
+            <File>
+              <FileName>MY_I2C.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\MY_I2C.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
