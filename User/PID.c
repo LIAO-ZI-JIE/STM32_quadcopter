@@ -2,20 +2,28 @@
 #include "Struct.h"
 #include "filter.h"
 PID_Struct PID_Structure;
-CascadePID_Struct PID_Roll_Structure;
+
 
 float D_Out,P_Out;
-void PID_Init(PID_Struct *pid,float p,float i,float d,float maxI,float maxOut,float sample_freq, float cutoff_freq)
+void PID_Init_inner(PID_Struct *pid,float p,float i,float d,float maxI,float maxOut,float sample_freq, float cutoff_freq)
 {
     pid->kp=p;
     pid->ki=i;
     pid->kd=d;
     pid->maxIntegral=maxI;
     pid->maxOutput=maxOut;
-		pid->E_filter=create_bw_low_pass_filter(2,sample_freq,cutoff_freq);
+//		pid->E_filter=create_bw_low_pass_filter(2,sample_freq,cutoff_freq);
 		pid->D_filter=create_bw_low_pass_filter(2,sample_freq,cutoff_freq);
 }
- 
+void PID_Init_outer(PID_Struct *pid,float p,float i,float d,float maxI,float maxOut)
+{
+    pid->kp=p;
+    pid->ki=i;
+    pid->kd=d;
+    pid->maxIntegral=maxI;
+    pid->maxOutput=maxOut;
+}
+  
 //进行一次pid计算
 //参数为(pid结构体,目标值,反馈值)，计算结果放在pid结构体的output成员中
 void PID_Calc(PID_Struct *pid,float reference,float feedback)

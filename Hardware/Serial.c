@@ -129,20 +129,7 @@ uint8_t Serial_GetRxFlag(void)
 
 
 
-//ANO的发送标志的数据结构
-typedef struct FLAG_TYPE
-{
-	uint8_t send_version;
-	uint8_t send_status;
-	uint8_t send_senser;
-	uint8_t send_rcdata;
-	uint8_t send_motopwm;
-	uint8_t send_power;
-	uint8_t send_pid1;
-	uint8_t send_pid2;
-	uint8_t send_pid3;
-	uint8_t send_pid4;
-}FLAG_TYPE;
+
 
 
 //数据拆分宏定义，在发送大于1字节的数据类型时，比如int16、float等，需要把数据拆分成单独字节进行发送
@@ -258,8 +245,8 @@ void ANO_DT_Data_Exchange(void)
 //		                  PID_PIT_Rate.P,PID_PIT_Rate.I,PID_PIT_Rate.D,
 //		                  PID_YAW_Rate.P,PID_YAW_Rate.I,PID_YAW_Rate.D);
 		ANO_DT_Send_PID(1,PID_Roll_Structure.inner.kp,PID_Roll_Structure.inner.ki,PID_Roll_Structure.inner.kd,
-		                  0,1,32,
-		                  0,1,32);
+		                  PID_Pitch_Structure.inner.kp,PID_Pitch_Structure.inner.ki,PID_Pitch_Structure.inner.kd,
+		                  PID_Yaw_Structure.inner.kp,PID_Yaw_Structure.inner.ki,PID_Yaw_Structure.inner.kd);
 
 	}	
 /////////////////////////////////////////////////////////////////////////////////////
@@ -444,6 +431,14 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
         PID_Roll_Structure.inner.kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
         PID_Roll_Structure.inner.ki = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
         PID_Roll_Structure.inner.kd = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        PID_Pitch_Structure.inner.kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        PID_Pitch_Structure.inner.ki= 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        PID_Pitch_Structure.inner.kd = 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+        PID_Yaw_Structure.inner.kp = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+        PID_Yaw_Structure.inner.ki = 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+        PID_Yaw_Structure.inner.kd = 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );			
+			
+			
 //        PID_ROL_Rate.P = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
 //        PID_ROL_Rate.I = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
 //        PID_ROL_Rate.D = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
@@ -460,9 +455,15 @@ void ANO_DT_Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
     if(*(data_buf+2)==0X11)								//PID2
     {
 		
-		PID_Roll_Structure.outer.kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+				PID_Roll_Structure.outer.kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
         PID_Roll_Structure.outer.ki = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
         PID_Roll_Structure.outer.kd = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        PID_Pitch_Structure.outer.kp	= 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        PID_Pitch_Structure.outer.ki	= 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        PID_Pitch_Structure.outer.kd	= 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+        PID_Yaw_Structure.outer.kp	 = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+        PID_Yaw_Structure.outer.ki 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+        PID_Yaw_Structure.outer.kd 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );				
 //        PID_ROL_Angle.P 	= 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
 //        PID_ROL_Angle.I 	= 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
 //        PID_ROL_Angle.D 	= 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );

@@ -25,5 +25,21 @@ void ANO_DT_Send_PID(uint8_t group,float p1_p,float p1_i,float p1_d,float p2_p,f
 void Data_Send_AngleRate(float data1,float data2,float data3,float data4,float data5,float data6,float data7,float data8); //角速度调试环
 void Data_Send_Angle2Rate(float data1,float data2,float data3,float data4,float data5,float data6,float data7,float data8);
 
+
+//ANO的发送标志的数据结构
+typedef struct FLAG_TYPE
+{
+	uint8_t send_version;
+	uint8_t send_status;
+	uint8_t send_senser;
+	uint8_t send_rcdata;
+	uint8_t send_motopwm;
+	uint8_t send_power;
+	uint8_t send_pid1;
+	uint8_t send_pid2;
+	uint8_t send_pid3;
+	uint8_t send_pid4;
+}FLAG_TYPE;
+extern FLAG_TYPE f;	
 //void Data_Send_Filter(void);    //滤波调试
 #endif

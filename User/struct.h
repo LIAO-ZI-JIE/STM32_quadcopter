@@ -134,6 +134,8 @@ extern Result_Struct Result_Structure;
 extern PID_Struct PID_Structure;
 extern Offset_Struct Offset_Structure;
 extern CascadePID_Struct PID_Roll_Structure;
+extern CascadePID_Struct PID_Pitch_Structure;
+extern CascadePID_Struct PID_Yaw_Structure;
 extern float_Struct Filter_Acc;
 #endif
 
